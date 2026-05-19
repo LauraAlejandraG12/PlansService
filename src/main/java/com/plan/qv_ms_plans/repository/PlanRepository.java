@@ -3,6 +3,7 @@ package com.plan.qv_ms_plans.repository;
 import com.plan.qv_ms_plans.model.entity.Plan;
 import com.plan.qv_ms_plans.model.enums.PlanStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -12,14 +13,14 @@ import java.util.List;
  * Repositorio para la gestión de planes en la base de datos.
  *
  * <p>Extiende {@link JpaRepository} para heredar las operaciones CRUD básicas
- * y define consultas adicionales para búsqueda y filtrado de planes.</p>
+ * y {@link JpaSpecificationExecutor} para permitir filtros combinados dinámicos.</p>
  *
  * @author Equipo Qvenly
  * @version Eilyn Florez
  */
-@Repository
-public interface PlanRepository extends JpaRepository<Plan, Integer> {
 
+@Repository
+public interface PlanRepository extends JpaRepository<Plan, Integer>, JpaSpecificationExecutor<Plan> {
     /**
      * Busca planes cuyo nombre contenga el texto indicado, sin distinguir mayúsculas.
      *
