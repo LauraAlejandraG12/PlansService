@@ -21,13 +21,13 @@ public class UserPlanRequestDTO {
      * ID del organizador al que se le asigna el plan.
      */
     @NotNull(message = "El ID del organizador es obligatorio.")
-    private Integer userId;
+    private Long userId;
 
     /**
      * ID del plan a asignar.
      */
     @NotNull(message = "El ID del plan es obligatorio.")
-    private Integer planId;
+    private Long planId;
 
     /**
      * Fecha de inicio de la asignación.

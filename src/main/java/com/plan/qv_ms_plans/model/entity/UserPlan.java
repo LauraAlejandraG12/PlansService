@@ -28,14 +28,14 @@ public class UserPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user_plan")
-    private Integer idUserPlan;
+    private Long idUserPlan;
 
     /**
      * ID del organizador al que se le asigna el plan.
      * Solo se almacena el ID porque los usuarios pertenecen a un microservicio independiente.
      */
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     /**
      * Plan asignado al organizador.

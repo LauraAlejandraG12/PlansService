@@ -28,7 +28,7 @@ public class PlanHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_history")
-    private Integer idHistory;
+    private Long idHistory;
 
     /**
      * Asignación de plan a la que pertenece este registro de historial.

@@ -46,7 +46,7 @@ public class UserPlanService {
      * @param startDate fecha de inicio de la asignación
      * @return entidad UserPlan lista para persistir
      */
-    private UserPlan buildUserPlan(Integer userId, Plan plan, LocalDate startDate) {
+    private UserPlan buildUserPlan(Long userId, Plan plan, LocalDate startDate) {
         UserPlan userPlan = new UserPlan();
         userPlan.setUserId(userId);
         userPlan.setPlan(plan);
@@ -116,7 +116,7 @@ public class UserPlanService {
      * @throws IllegalStateException si el plan no está activo
      */
     @Transactional
-    public UserPlanResponseDTO assignPlanByAdmin(UserPlanRequestDTO userPlanRequestDTO, Integer adminId) {
+    public UserPlanResponseDTO assignPlanByAdmin(UserPlanRequestDTO userPlanRequestDTO, Long adminId) {
         Plan plan = planService.findPlanById((userPlanRequestDTO.getPlanId()));
 
         if (!plan.getStatus().name().equals("active")) {
@@ -146,7 +146,7 @@ public class UserPlanService {
      * @throws IllegalStateException si el plan no está activo
      */
     @Transactional
-    public UserPlanResponseDTO acquirePlanByOrganizer(UserPlanRequestDTO userPlanRequestDTO, Integer organizerId) {
+    public UserPlanResponseDTO acquirePlanByOrganizer(UserPlanRequestDTO userPlanRequestDTO, Long organizerId) {
         Plan plan = planService.findPlanById(userPlanRequestDTO.getPlanId());
 
         if (!plan.getStatus().name().equals("active")) {
@@ -171,7 +171,7 @@ public class UserPlanService {
      * @return entidad UserPlan encontrada
      * @throws EntityNotFoundException si la asignación no existe
      */
-    public UserPlan findUserPlanById(Integer id) {
+    public UserPlan findUserPlanById(Long id) {
         return userPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Asignación de plan no encontrada con ID: " + id));
@@ -190,7 +190,7 @@ public class UserPlanService {
      * @throws EntityNotFoundException si la asignación no existe
      */
     @Transactional
-    public UserPlanResponseDTO renewPlan(Integer userPlanId, Integer executorId) {
+    public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId) {
         UserPlan userPlan = findUserPlanById(userPlanId);
 
         userPlan.setStartDate(LocalDate.now());
@@ -214,7 +214,7 @@ public class UserPlanService {
      * @param userId ID del organizador
      * @return lista de asignaciones convertidas a DTO
      */
-    public List<UserPlanResponseDTO> getPlansByUser(Integer userId) {
+    public List<UserPlanResponseDTO> getPlansByUser(Long userId) {
         return userPlanRepository.findByUserId(userId)
                 .stream()
                 .map(this::toResponseDTO)
@@ -228,7 +228,7 @@ public class UserPlanService {
      * @return DTO con los datos del plan activo
      * @throws EntityNotFoundException si el organizador no tiene un plan activo
      */
-    public UserPlanResponseDTO getActivePlanByUser(Integer userId) {
+    public UserPlanResponseDTO getActivePlanByUser(Long userId) {
         UserPlan userPlan = userPlanRepository
                 .findByUserIdAndStatus(userId, UserPlanStatus.active)
                 .orElseThrow(() -> new EntityNotFoundException(

@@ -36,7 +36,7 @@ public class PlanHistoryController {
      * @return historial de planes con HTTP 200
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<MessageResponseDTO<List<PlanHistoryResponseDTO>>>  getHistoryByUser(@PathVariable Integer userId) {
+    public ResponseEntity<MessageResponseDTO<List<PlanHistoryResponseDTO>>>  getHistoryByUser(@PathVariable Long userId) {
         log.info("Consultando historial de planes del organizador ID: {}", userId);
         List<PlanHistoryResponseDTO> planHistoryResponseDTOList = planHistoryService.getHistoryByUser(userId);
         return ResponseEntity.ok(MessageResponseDTO.success("Historial de planes obtenido exitosamente.", planHistoryResponseDTOList));
@@ -49,7 +49,7 @@ public class PlanHistoryController {
      * @return historial de la asignación con HTTP 200
      */
     @GetMapping("/user-plan/{userPlanId}")
-    public ResponseEntity<MessageResponseDTO<List<PlanHistoryResponseDTO>>> getHistoryByUserPlan(@PathVariable Integer userPlanId) {
+    public ResponseEntity<MessageResponseDTO<List<PlanHistoryResponseDTO>>> getHistoryByUserPlan(@PathVariable Long userPlanId) {
         log.info("Consultando historial de la asignación ID: {}", userPlanId);
         List<PlanHistoryResponseDTO> planHistoryResponseDTOList = planHistoryService.getHistoryByUserPlan(userPlanId);
         return ResponseEntity.ok(MessageResponseDTO.success("Historial de la asignación obtenido exitosamente.", planHistoryResponseDTOList));

@@ -38,7 +38,7 @@ public class UserPlanController {
      * @return asignación creada con HTTP 201
      */
     @PostMapping("/assign")
-    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> assignPlanByAdmin(@RequestHeader("X-User-Id") Integer adminId, @Valid @RequestBody UserPlanRequestDTO userPlanRequestDTO) {
+    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> assignPlanByAdmin(@RequestHeader("X-User-Id") Long adminId, @Valid @RequestBody UserPlanRequestDTO userPlanRequestDTO) {
         log.info("Administrador ID: {} asignando plan ID: {} al organizador ID: {}", adminId, userPlanRequestDTO.getPlanId(), userPlanRequestDTO.getUserId());
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.assignPlanByAdmin(userPlanRequestDTO, adminId);
         return ResponseEntity.status(HttpStatus.CREATED).body(MessageResponseDTO.success("Plan asignado exitosamente al organizador.", userPlanResponseDTO));
@@ -52,7 +52,7 @@ public class UserPlanController {
      * @return asignación creada con HTTP 201
      */
     @PostMapping("/acquire")
-    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> acquirePlanByOrganizer(@RequestHeader("X-User-Id") Integer organizerId, @Valid @RequestBody UserPlanRequestDTO userPlanRequestDTO) {
+    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> acquirePlanByOrganizer(@RequestHeader("X-User-Id") Long organizerId, @Valid @RequestBody UserPlanRequestDTO userPlanRequestDTO) {
         log.info("Organizador ID: {} adquiriendo plan ID: {}", organizerId, userPlanRequestDTO.getPlanId());
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.acquirePlanByOrganizer(userPlanRequestDTO, organizerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(MessageResponseDTO.success("Plan adquirido exitosamente.", userPlanResponseDTO));
@@ -67,7 +67,7 @@ public class UserPlanController {
      * @return asignación renovada con HTTP 200
      */
     @PutMapping("/{userPlanId}/renew")
-    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> renewPlan(@PathVariable Integer userPlanId, @RequestHeader("X-User-Id") Integer executorId) {
+    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> renewPlan(@PathVariable Long userPlanId, @RequestHeader("X-User-Id") Long executorId) {
         log.info("Renovando plan asignado ID: {} por usuario ID: {}", userPlanId, executorId);
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.renewPlan(userPlanId, executorId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan renovado exitosamente.", userPlanResponseDTO));
@@ -80,7 +80,7 @@ public class UserPlanController {
      * @return lista de planes del organizador con HTTP 200
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<MessageResponseDTO<List<UserPlanResponseDTO>>> getPlansByUser(@PathVariable Integer userId) {
+    public ResponseEntity<MessageResponseDTO<List<UserPlanResponseDTO>>> getPlansByUser(@PathVariable Long userId) {
         log.info("Consultando planes del organizador ID: {}", userId);
         List<UserPlanResponseDTO> listPlans = userPlanService.getPlansByUser(userId);
         return ResponseEntity.ok(MessageResponseDTO.success("Planes del organizador obtenido exitosamente.", listPlans));
@@ -93,7 +93,7 @@ public class UserPlanController {
      * @return plan activo del organizador con HTTP 200
      */
     @GetMapping("/user/{userId}/active")
-    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> getActivePlanByUser(@PathVariable Integer userId) {
+    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> getActivePlanByUser(@PathVariable Long userId) {
         log.info("Consultando plan activo del organizador ID: {}", userId);
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.getActivePlanByUser(userId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan activo del organizador obtenido exitosamente.", userPlanResponseDTO));

@@ -19,10 +19,10 @@ import java.time.LocalDateTime;
 public class UserPlanResponseDTO {
 
     /** Identificador único de la asignación. */
-    private Integer idUserPlan;
+    private Long idUserPlan;
 
     /** ID del organizador al que se le asignó el plan. */
-    private Integer userId;
+    private Long userId;
 
     /** Información del plan asignado. */
     private PlanResponseDTO plan;

@@ -64,7 +64,7 @@ public class PlanHistoryService {
      * @return lista de registros de historial convertidos a DTO
      * @throws EntityNotFoundException si el organizador no tiene historial
      */
-    public List<PlanHistoryResponseDTO> getHistoryByUser(Integer userId) {
+    public List<PlanHistoryResponseDTO> getHistoryByUser(Long userId) {
         List<PlanHistory> history = planHistoryRepository.findByUserPlanUserId(userId);
         if (history.isEmpty()) {
             throw new EntityNotFoundException(
@@ -82,7 +82,7 @@ public class PlanHistoryService {
      * @return lista de registros de historial de la asignación
      * @throws EntityNotFoundException si no hay historial para la asignación
      */
-    public List<PlanHistoryResponseDTO> getHistoryByUserPlan(Integer userPlanId) {
+    public List<PlanHistoryResponseDTO> getHistoryByUserPlan(Long userPlanId) {
         List<PlanHistory> history = planHistoryRepository.findByUserPlanIdUserPlan(userPlanId);
         if (history.isEmpty()) {
             throw new EntityNotFoundException(
