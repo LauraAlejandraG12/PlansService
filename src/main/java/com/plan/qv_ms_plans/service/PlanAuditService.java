@@ -37,7 +37,7 @@ public class PlanAuditService {
      */
 
     @Transactional
-    public void registerAudit(Plan plan, Integer adminId, AuditAction action, String description) {
+    public void registerAudit(Plan plan, Long adminId, AuditAction action, String description) {
         PlanAudit audit = new PlanAudit();
         audit.setPlan(plan);
         audit.setUserId(adminId);
@@ -77,7 +77,7 @@ public class PlanAuditService {
      * @return lista de registros de auditoría convertidos a DTO
      */
 
-    public List<PlanAuditResponseDTO> getAuditByPlan(Integer planId) {
+    public List<PlanAuditResponseDTO> getAuditByPlan(Long planId) {
         return planAuditRepository.findByPlanIdPlan(planId)
                 .stream()
                 .map(this::toResponseDTO)

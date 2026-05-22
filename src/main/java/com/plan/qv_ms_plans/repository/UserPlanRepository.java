@@ -19,7 +19,7 @@ import java.util.Optional;
  * @version Eilyn Florez
  */
 @Repository
-public interface UserPlanRepository extends JpaRepository<UserPlan, Integer> {
+public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
 
     /**
      * Busca todos los planes asignados a un organizador específico.
@@ -27,7 +27,7 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Integer> {
      * @param userId ID del organizador
      * @return lista de planes asignados al organizador
      */
-    List<UserPlan> findByUserId(Integer userId);
+    List<UserPlan> findByUserId(Long userId);
 
     /**
      * Busca el plan activo de un organizador específico.
@@ -36,7 +36,7 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Integer> {
      * @param status estado del plan a buscar
      * @return plan asignado con el estado indicado si existe
      */
-    Optional<UserPlan> findByUserIdAndStatus(Integer userId, UserPlanStatus status);
+    Optional<UserPlan> findByUserIdAndStatus(Long userId, UserPlanStatus status);
 
     /**
      * Busca todos los planes asignados con un estado específico.
@@ -64,5 +64,5 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Integer> {
      * @param planId ID del plan a verificar
      * @return {@code true} si el plan está asignado a algún organizador
      */
-    boolean existsByPlanIdPlan(Integer planId);
+    boolean existsByPlanIdPlan(Long planId);
 }

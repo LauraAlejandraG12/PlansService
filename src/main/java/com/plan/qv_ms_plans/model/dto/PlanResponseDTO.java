@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class PlanResponseDTO {
 
     /** Identificador único del plan. */
-    private Integer idPlan;
+    private Long idPlan;
 
     /** Nombre del plan. */
     private String name;

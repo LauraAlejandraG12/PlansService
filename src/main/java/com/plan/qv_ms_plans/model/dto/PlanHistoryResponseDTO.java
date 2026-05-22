@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class PlanHistoryResponseDTO {
 
     /** Identificador único del registro de historial. */
-    private Integer idHistory;
+    private Long idHistory;
 
     /** Información del plan asociado al historial. */
     private PlanResponseDTO plan;

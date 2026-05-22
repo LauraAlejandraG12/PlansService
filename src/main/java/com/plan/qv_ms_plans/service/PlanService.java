@@ -72,7 +72,7 @@ public class PlanService {
      */
 
     @Transactional
-    public PlanResponseDTO createPlan(PlanRequestDTO planRequestDTO, Integer adminId) {
+    public PlanResponseDTO createPlan(PlanRequestDTO planRequestDTO, Long adminId) {
         if(planRepository.existsByName(planRequestDTO.getName())) {
             throw new IllegalArgumentException("Ya existe un plan con el nombre: " + planRequestDTO.getName());
         }
@@ -135,7 +135,7 @@ public class PlanService {
      * @return entidad Plan encontrada
      * @throws EntityNotFoundException si el plan no existe
      */
-    public Plan findPlanById(Integer id) {
+    public Plan findPlanById(Long id) {
         return planRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Plan no encontrado con ID: " + id));
@@ -148,7 +148,7 @@ public class PlanService {
      * @return DTO con los datos del plan
      * @throws EntityNotFoundException si el plan no existe
      */
-    public PlanResponseDTO getPlanById(Integer id) {
+    public PlanResponseDTO getPlanById(Long id) {
         Plan plan = findPlanById(id);
         return toResponseDTO(plan);
     }
@@ -168,7 +168,7 @@ public class PlanService {
      */
 
     @Transactional
-    public PlanResponseDTO updatePlan(Integer id, PlanRequestDTO planRequestDTO, Integer adminId) {
+    public PlanResponseDTO updatePlan(Long id, PlanRequestDTO planRequestDTO, Long adminId) {
         Plan existingPlan = findPlanById(id);
 
         if(!existingPlan.getName().equals(planRequestDTO.getName()) && planRepository.existsByName(planRequestDTO.getName())) {
@@ -203,7 +203,7 @@ public class PlanService {
      * @throws IllegalStateException si el plan está asignado a algún organizador
      */
     @Transactional
-    public void deletePlan(Integer id, Integer adminId) {
+    public void deletePlan(Long id, Long adminId) {
         Plan plan = findPlanById(id);
 
         if (userPlanRepository.existsByPlanIdPlan(id)) {

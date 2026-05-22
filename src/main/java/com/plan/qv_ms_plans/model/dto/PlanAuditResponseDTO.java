@@ -18,13 +18,13 @@ import java.time.LocalDateTime;
 public class PlanAuditResponseDTO {
 
     /** Identificador único del registro de auditoría. */
-    private Integer idAudit;
+    private Long idAudit;
 
     /** Información del plan auditado. */
     private PlanResponseDTO plan;
 
     /** ID del administrador que realizó la acción. */
-    private Integer userId;
+    private Long userId;
 
     /** Tipo de acción realizada sobre el plan. */
     private AuditAction action;

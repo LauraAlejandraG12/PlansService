@@ -18,7 +18,7 @@ import java.util.List;
  * @version Eilyn Florez
  */
 @Repository
-public interface PlanAuditRepository extends JpaRepository<PlanAudit, Integer> {
+public interface PlanAuditRepository extends JpaRepository<PlanAudit, Long> {
 
     /**
      * Busca todos los registros de auditoría de un plan específico.
@@ -26,7 +26,7 @@ public interface PlanAuditRepository extends JpaRepository<PlanAudit, Integer> {
      * @param planId ID del plan
      * @return lista de registros de auditoría del plan
      */
-    List<PlanAudit> findByPlanIdPlan(Integer planId);
+    List<PlanAudit> findByPlanIdPlan(Long planId);
 
     /**
      * Busca todos los registros de auditoría realizados por un administrador específico.
@@ -34,7 +34,7 @@ public interface PlanAuditRepository extends JpaRepository<PlanAudit, Integer> {
      * @param userId ID del administrador
      * @return lista de registros de auditoría del administrador
      */
-    List<PlanAudit> findByUserId(Integer userId);
+    List<PlanAudit> findByUserId(Long userId);
 
     /**
      * Busca todos los registros de auditoría por tipo de acción.

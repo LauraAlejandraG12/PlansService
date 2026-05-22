@@ -27,7 +27,7 @@ public class PlanAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_audit")
-    private Integer idAudit;
+    private Long idAudit;
 
     /**
      * Plan sobre el cual se realizó la acción auditada.
@@ -41,7 +41,7 @@ public class PlanAudit {
      * Solo se almacena el ID porque los usuarios pertenecen a un microservicio independiente.
      */
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     /**
      * Tipo de acción realizada sobre el plan.

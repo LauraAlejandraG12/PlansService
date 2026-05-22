@@ -28,7 +28,7 @@ public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_plan")
-    private Integer idPlan;
+    private Long idPlan;
 
     /**
      * Nombre del plan. No puede ser nulo.

@@ -38,7 +38,7 @@ public class PlanAuditController {
      */
     @GetMapping("/plan/{planId}")
     public ResponseEntity<MessageResponseDTO<List<PlanAuditResponseDTO>>> getAuditByPlan(
-            @PathVariable Integer planId) {
+            @PathVariable Long planId) {
         log.info("Consultando auditoría del plan ID: {}", planId);
         List<PlanAuditResponseDTO> audit = planAuditService.getAuditByPlan(planId);
         return ResponseEntity.ok(MessageResponseDTO.success(

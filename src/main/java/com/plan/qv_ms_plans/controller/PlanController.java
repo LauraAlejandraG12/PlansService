@@ -40,7 +40,7 @@ public class PlanController {
      * @return plan creado con HTTP 201
      */
     @PostMapping
-    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> createPlan(@RequestHeader("X-User-Id") Integer adminId, @Valid @RequestBody PlanRequestDTO planRequestDTO) {
+    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> createPlan(@RequestHeader("X-User-Id") Long adminId, @Valid @RequestBody PlanRequestDTO planRequestDTO) {
         log.info("Creando plan: {}", planRequestDTO.getName());
         PlanResponseDTO planResponseDTO = planService.createPlan(planRequestDTO, adminId);
         return ResponseEntity.status(HttpStatus.CREATED).body(MessageResponseDTO.success("Plan creado exitosamente.", planResponseDTO));
@@ -82,8 +82,8 @@ public class PlanController {
      * @param id ID del plan a consultar
      * @return plan encontrado con HTTP 200
      */
-    @GetMapping("/{id]")
-    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> getPlanById(@PathVariable Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> getPlanById(@PathVariable Long id) {
         log.info("Consultando plan con ID: {}", id);
         PlanResponseDTO planResponseDTO = planService.getPlanById(id);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan obtenido exitosamente.", planResponseDTO));
@@ -98,7 +98,7 @@ public class PlanController {
      * @return plan actualizado con HTTP 200
      */
     @PutMapping("/{id}")
-    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> updatePlan(@PathVariable Integer id, @RequestHeader("X-User-Id") Integer adminId, @Valid @RequestBody PlanRequestDTO planRequestDTO) {
+    public ResponseEntity<MessageResponseDTO<PlanResponseDTO>> updatePlan(@PathVariable Long id, @RequestHeader("X-User-Id") Long adminId, @Valid @RequestBody PlanRequestDTO planRequestDTO) {
         log.info("Actualizando plan con ID: {}", id);
         PlanResponseDTO planResponseDTO = planService.updatePlan(id, planRequestDTO, adminId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan actualizado exitosamente.", planResponseDTO));
@@ -112,7 +112,7 @@ public class PlanController {
      * @return HTTP 204 sin contenido
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponseDTO<Void>> deletePlan(@PathVariable Integer id, @RequestHeader("X-User-Id") Integer adminId) {
+    public ResponseEntity<MessageResponseDTO<Void>> deletePlan(@PathVariable Long id, @RequestHeader("X-User-Id") Long adminId) {
         log.info("Eliminando plan con ID: {}", id);
         planService.deletePlan( id, adminId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan eliminado exitosamente."));

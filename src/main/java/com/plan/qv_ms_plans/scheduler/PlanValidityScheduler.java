@@ -61,7 +61,7 @@ public class PlanValidityScheduler {
 
                 planAuditService.registerAudit(
                         userPlan.getPlan(),
-                        0,
+                        0L,
                         AuditAction.update,
                         "El plan: " + userPlan.getPlan().getName() +
                                 " del organizador ID: " + userPlan.getUserId() +

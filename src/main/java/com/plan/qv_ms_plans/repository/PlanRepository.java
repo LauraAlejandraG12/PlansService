@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 @Repository
-public interface PlanRepository extends JpaRepository<Plan, Integer>, JpaSpecificationExecutor<Plan> {
+public interface PlanRepository extends JpaRepository<Plan, Long>, JpaSpecificationExecutor<Plan> {
     /**
      * Busca planes cuyo nombre contenga el texto indicado, sin distinguir mayúsculas.
      *

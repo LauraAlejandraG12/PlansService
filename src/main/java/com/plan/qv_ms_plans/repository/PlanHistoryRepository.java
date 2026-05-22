@@ -16,7 +16,7 @@ import java.util.List;
  * @version Eilyn Florez
  */
 @Repository
-public interface PlanHistoryRepository extends JpaRepository<PlanHistory, Integer> {
+public interface PlanHistoryRepository extends JpaRepository<PlanHistory, Long> {
 
     /**
      * Busca todo el historial de planes de un organizador específico.
@@ -25,7 +25,7 @@ public interface PlanHistoryRepository extends JpaRepository<PlanHistory, Intege
      * @param userId ID del organizador
      * @return lista de registros de historial del organizador
      */
-    List<PlanHistory> findByUserPlanUserId(Integer userId);
+    List<PlanHistory> findByUserPlanUserId(Long userId);
 
     /**
      * Busca todo el historial asociado a una asignación específica.
@@ -33,7 +33,7 @@ public interface PlanHistoryRepository extends JpaRepository<PlanHistory, Intege
      * @param userPlanId ID de la asignación
      * @return lista de registros de historial de la asignación
      */
-    List<PlanHistory> findByUserPlanIdUserPlan(Integer userPlanId);
+    List<PlanHistory> findByUserPlanIdUserPlan(Long userPlanId);
 
     /**
      * Busca todo el historial asociado a un plan específico.
@@ -41,5 +41,5 @@ public interface PlanHistoryRepository extends JpaRepository<PlanHistory, Intege
      * @param planId ID del plan
      * @return lista de registros de historial del plan
      */
-    List<PlanHistory> findByPlanIdPlan(Integer planId);
+    List<PlanHistory> findByPlanIdPlan(Long planId);
 }
