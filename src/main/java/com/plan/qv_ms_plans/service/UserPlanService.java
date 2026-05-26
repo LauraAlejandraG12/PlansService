@@ -209,19 +209,6 @@ public class UserPlanService {
     }
 
     /**
-     * Retorna todos los planes asignados a un organizador específico (HU46).
-     *
-     * @param userId ID del organizador
-     * @return lista de asignaciones convertidas a DTO
-     */
-    public List<UserPlanResponseDTO> getPlansByUser(Long userId) {
-        return userPlanRepository.findByUserId(userId)
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
-    }
-
-    /**
      * Retorna el plan activo de un organizador específico.
      *
      * @param userId ID del organizador
