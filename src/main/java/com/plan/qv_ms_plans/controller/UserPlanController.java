@@ -74,19 +74,6 @@ public class UserPlanController {
     }
 
     /**
-     * Retorna todos los planes asignados a un organizador (HU46).
-     *
-     * @param userId ID del organizador
-     * @return lista de planes del organizador con HTTP 200
-     */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<MessageResponseDTO<List<UserPlanResponseDTO>>> getPlansByUser(@PathVariable Long userId) {
-        log.info("Consultando planes del organizador ID: {}", userId);
-        List<UserPlanResponseDTO> listPlans = userPlanService.getPlansByUser(userId);
-        return ResponseEntity.ok(MessageResponseDTO.success("Planes del organizador obtenido exitosamente.", listPlans));
-    }
-
-    /**
      * Retorna el plan activo de un organizador específico.
      *
      * @param userId ID del organizador

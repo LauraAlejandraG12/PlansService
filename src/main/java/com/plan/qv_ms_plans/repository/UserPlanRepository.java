@@ -22,14 +22,6 @@ import java.util.Optional;
 public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
 
     /**
-     * Busca todos los planes asignados a un organizador específico.
-     *
-     * @param userId ID del organizador
-     * @return lista de planes asignados al organizador
-     */
-    List<UserPlan> findByUserId(Long userId);
-
-    /**
      * Busca el plan activo de un organizador específico.
      *
      * @param userId ID del organizador
