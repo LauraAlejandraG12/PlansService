@@ -1,17 +1,15 @@
-package com.plan.qv_ms_plans.controller;
+package com.plan.qv_ms_plans.controller.plans;
 
-import com.plan.qv_ms_plans.model.dto.MessageResponseDTO;
-import com.plan.qv_ms_plans.model.dto.UserPlanRequestDTO;
-import com.plan.qv_ms_plans.model.dto.UserPlanResponseDTO;
-import com.plan.qv_ms_plans.service.UserPlanService;
+import com.plan.qv_ms_plans.model.dto.plans.MessageResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.UserPlanRequestDTO;
+import com.plan.qv_ms_plans.model.dto.plans.UserPlanResponseDTO;
+import com.plan.qv_ms_plans.service.plans.UserPlanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Controlador REST para la gestión de planes asignados a organizadores (HU42, HU43).

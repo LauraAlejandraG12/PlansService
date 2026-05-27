@@ -1,7 +1,7 @@
-package com.plan.qv_ms_plans.service;
+package com.plan.qv_ms_plans.service.plans;
 
-import com.plan.qv_ms_plans.model.dto.PlanHistoryResponseDTO;
-import com.plan.qv_ms_plans.model.dto.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanHistoryResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
 import com.plan.qv_ms_plans.model.entity.PlanHistory;
 import com.plan.qv_ms_plans.repository.PlanHistoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,9 +45,17 @@ public class PlanHistoryService {
             PlanResponseDTO planResponseDTO = new PlanResponseDTO();
             planResponseDTO.setIdPlan(history.getPlan().getIdPlan());
             planResponseDTO.setName(history.getPlan().getName());
+            planResponseDTO.setDescription(history.getPlan().getDescription());
             planResponseDTO.setPrice(history.getPlan().getPrice());
             planResponseDTO.setDurationDays(history.getPlan().getDurationDays());
+            planResponseDTO.setMaxOrganizers(history.getPlan().getMaxOrganizers());
+            planResponseDTO.setMaxParticipants(history.getPlan().getMaxParticipants());
+            planResponseDTO.setMaxJudges(history.getPlan().getMaxJudges());
+            planResponseDTO.setMaxAttendees(history.getPlan().getMaxAttendees());
+            planResponseDTO.setMaxStaff(history.getPlan().getMaxStaff());
             planResponseDTO.setStatus(history.getPlan().getStatus());
+            planResponseDTO.setCreatedAt(history.getPlan().getCreatedAt());
+            planResponseDTO.setUpdatedAt(history.getPlan().getUpdatedAt());
             planHistoryResponseDTO.setPlan(planResponseDTO);
         }
 

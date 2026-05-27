@@ -1,7 +1,7 @@
-package com.plan.qv_ms_plans.service;
+package com.plan.qv_ms_plans.service.plans;
 
-import com.plan.qv_ms_plans.model.dto.PlanAuditResponseDTO;
-import com.plan.qv_ms_plans.model.dto.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanAuditResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
 import com.plan.qv_ms_plans.model.entity.Plan;
 import com.plan.qv_ms_plans.model.entity.PlanAudit;
 import com.plan.qv_ms_plans.model.enums.AuditAction;
@@ -53,21 +53,44 @@ public class PlanAuditService {
      * @return DTO listo para enviar al cliente
      */
     private PlanAuditResponseDTO toResponseDTO(PlanAudit audit) {
-        PlanAuditResponseDTO dto = new PlanAuditResponseDTO();
-        dto.setIdAudit(audit.getIdAudit());
-        dto.setUserId(audit.getUserId());
-        dto.setAction(audit.getAction());
-        dto.setChangeDescription(audit.getChangeDescription());
-        dto.setAuditDate(audit.getAuditDate());
+        PlanAuditResponseDTO planAuditResponseDTO = new PlanAuditResponseDTO();
+        planAuditResponseDTO.setIdAudit(audit.getIdAudit());
+        planAuditResponseDTO.setUserId(audit.getUserId());
+        planAuditResponseDTO.setAction(audit.getAction());
+        planAuditResponseDTO.setChangeDescription(audit.getChangeDescription());
+        planAuditResponseDTO.setAuditDate(audit.getAuditDate());
 
         if(audit.getPlan() != null) {
             PlanResponseDTO planResponseDTO = new PlanResponseDTO();
             planResponseDTO.setIdPlan(audit.getPlan().getIdPlan());
             planResponseDTO.setName(audit.getPlan().getName());
-            dto.setPlan(planResponseDTO);
+            planResponseDTO.setDescription(audit.getPlan().getDescription());
+            planResponseDTO.setPrice(audit.getPlan().getPrice());
+            planResponseDTO.setDurationDays(audit.getPlan().getDurationDays());
+            planResponseDTO.setMaxOrganizers(audit.getPlan().getMaxOrganizers());
+            planResponseDTO.setMaxParticipants(audit.getPlan().getMaxParticipants());
+            planResponseDTO.setMaxJudges(audit.getPlan().getMaxJudges());
+            planResponseDTO.setMaxAttendees(audit.getPlan().getMaxAttendees());
+            planResponseDTO.setMaxStaff(audit.getPlan().getMaxStaff());
+            planResponseDTO.setStatus(audit.getPlan().getStatus());
+            planResponseDTO.setCreatedAt(audit.getPlan().getCreatedAt());
+            planResponseDTO.setUpdatedAt(audit.getPlan().getUpdatedAt());
+            planAuditResponseDTO.setPlan(planResponseDTO);
         }
 
-        return dto;
+        return planAuditResponseDTO;
+    }
+
+    /**
+     * Retorna todos los registros de auditoría del sistema (HU48).
+     *
+     * @return lista de todos los registros de auditoría convertidos a DTO
+     */
+    public List<PlanAuditResponseDTO> getAllAudits() {
+        return planAuditRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 
     /**

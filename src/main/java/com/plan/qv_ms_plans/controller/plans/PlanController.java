@@ -1,10 +1,10 @@
-package com.plan.qv_ms_plans.controller;
+package com.plan.qv_ms_plans.controller.plans;
 
-import com.plan.qv_ms_plans.model.dto.MessageResponseDTO;
-import com.plan.qv_ms_plans.model.dto.PlanRequestDTO;
-import com.plan.qv_ms_plans.model.dto.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.MessageResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanRequestDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
 import com.plan.qv_ms_plans.model.enums.PlanStatus;
-import com.plan.qv_ms_plans.service.PlanService;
+import com.plan.qv_ms_plans.service.plans.PlanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,16 +105,25 @@ public class PlanController {
     }
 
     /**
-     * Elimina un plan del sistema (HU41).
+     * Elimina lógicamente un plan del sistema (HU41).
+     *
+     * <p>El plan no se borra físicamente de la base de datos, sino que se marca
+     * como eliminado conservando la integridad de la auditoría.
+     * Solo se puede eliminar si no está asignado a ningún organizador.</p>
      *
      * @param id ID del plan a eliminar
      * @param adminId ID del administrador obtenido del header
-     * @return HTTP 204 sin contenido
+     * @param reason motivo de la eliminación registrado en la auditoría
+     * @return HTTP 200 con mensaje de confirmación
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponseDTO<Void>> deletePlan(@PathVariable Long id, @RequestHeader("X-User-Id") Long adminId) {
+    public ResponseEntity<MessageResponseDTO<Void>> deletePlan(
+            @PathVariable Long id,
+            @RequestHeader("X-User-Id") Long adminId,
+            @RequestParam String reason) {
         log.info("Eliminando plan con ID: {}", id);
-        planService.deletePlan( id, adminId);
-        return ResponseEntity.ok(MessageResponseDTO.success("Plan eliminado exitosamente."));
+        planService.deletePlan(id, adminId, reason);
+        return ResponseEntity.ok(MessageResponseDTO.success(
+                "Plan eliminado exitosamente."));
     }
 }

@@ -1,8 +1,8 @@
-package com.plan.qv_ms_plans.controller;
+package com.plan.qv_ms_plans.controller.plans;
 
-import com.plan.qv_ms_plans.model.dto.MessageResponseDTO;
-import com.plan.qv_ms_plans.model.dto.PlanHistoryResponseDTO;
-import com.plan.qv_ms_plans.service.PlanHistoryService;
+import com.plan.qv_ms_plans.model.dto.plans.MessageResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanHistoryResponseDTO;
+import com.plan.qv_ms_plans.service.plans.PlanHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

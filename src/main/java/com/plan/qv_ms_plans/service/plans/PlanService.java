@@ -1,12 +1,11 @@
-package com.plan.qv_ms_plans.service;
+package com.plan.qv_ms_plans.service.plans;
 
-import com.plan.qv_ms_plans.model.dto.PlanRequestDTO;
-import com.plan.qv_ms_plans.model.dto.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanRequestDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
 import com.plan.qv_ms_plans.model.entity.Plan;
 import com.plan.qv_ms_plans.model.enums.AuditAction;
 import com.plan.qv_ms_plans.model.enums.PlanStatus;
 import com.plan.qv_ms_plans.model.specification.PlanSpecification;
-import com.plan.qv_ms_plans.repository.PlanAuditRepository;
 import com.plan.qv_ms_plans.repository.PlanRepository;
 import com.plan.qv_ms_plans.repository.UserPlanRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,10 +25,10 @@ import java.util.List;
  * @author Equipo Qvenly
  * @version Eilyn Florez
  */
-
 @Service
 @RequiredArgsConstructor
 public class PlanService {
+
     private final PlanRepository planRepository;
     private final UserPlanRepository userPlanRepository;
     private final PlanAuditService planAuditService;
@@ -55,7 +54,6 @@ public class PlanService {
         planResponseDTO.setStatus(plan.getStatus());
         planResponseDTO.setCreatedAt(plan.getCreatedAt());
         planResponseDTO.setUpdatedAt(plan.getUpdatedAt());
-
         return planResponseDTO;
     }
 
@@ -70,10 +68,9 @@ public class PlanService {
      * @return DTO con los datos del plan creado
      * @throws IllegalArgumentException si ya existe un plan con el mismo nombre
      */
-
     @Transactional
     public PlanResponseDTO createPlan(PlanRequestDTO planRequestDTO, Long adminId) {
-        if(planRepository.existsByName(planRequestDTO.getName())) {
+        if (planRepository.existsByNameAndDeletedFalse(planRequestDTO.getName())) {
             throw new IllegalArgumentException("Ya existe un plan con el nombre: " + planRequestDTO.getName());
         }
 
@@ -98,11 +95,12 @@ public class PlanService {
 
     /**
      * Retorna la lista completa de planes registrados en el sistema (HU37).
+     * Solo retorna planes no eliminados lógicamente.
      *
      * @return lista de todos los planes convertidos a DTO
      */
     public List<PlanResponseDTO> getAllPlans() {
-        return planRepository.findAll()
+        return planRepository.findByDeletedFalse()
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
@@ -111,7 +109,8 @@ public class PlanService {
     /**
      * Busca y filtra planes combinando múltiples criterios simultáneamente (HU38).
      *
-     * <p>Cada criterio es opcional y se pueden combinar entre sí.</p>
+     * <p>Cada criterio es opcional y se pueden combinar entre sí.
+     * Solo retorna planes no eliminados lógicamente.</p>
      *
      * @param name texto a buscar en el nombre del plan
      * @param status estado del plan a filtrar
@@ -119,8 +118,8 @@ public class PlanService {
      * @param maxPrice precio máximo del rango
      * @return lista de planes que coinciden con los criterios combinados
      */
-
-    public List<PlanResponseDTO> filterPlans(String name, PlanStatus status, BigDecimal minPrice, BigDecimal maxPrice) {
+    public List<PlanResponseDTO> filterPlans(String name, PlanStatus status,
+                                             BigDecimal minPrice, BigDecimal maxPrice) {
         return planRepository.findAll(PlanSpecification.filterBy(name, status, minPrice, maxPrice))
                 .stream()
                 .map(this::toResponseDTO)
@@ -128,15 +127,15 @@ public class PlanService {
     }
 
     /**
-     * Busca un plan por ID y lanza excepción si no existe.
-     * Método interno reutilizable por otros servicios
+     * Busca un plan por ID que no esté eliminado lógicamente.
+     * Método interno reutilizable por otros servicios.
      *
      * @param id ID del plan
      * @return entidad Plan encontrada
-     * @throws EntityNotFoundException si el plan no existe
+     * @throws EntityNotFoundException si el plan no existe o está eliminado
      */
     public Plan findPlanById(Long id) {
-        return planRepository.findById(id)
+        return planRepository.findByIdPlanAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Plan no encontrado con ID: " + id));
     }
@@ -146,7 +145,7 @@ public class PlanService {
      *
      * @param id ID del plan a consultar
      * @return DTO con los datos del plan
-     * @throws EntityNotFoundException si el plan no existe
+     * @throws EntityNotFoundException si el plan no existe o está eliminado
      */
     public PlanResponseDTO getPlanById(Long id) {
         Plan plan = findPlanById(id);
@@ -163,15 +162,15 @@ public class PlanService {
      * @param planRequestDTO datos nuevos del plan
      * @param adminId ID del administrador que realiza la acción
      * @return DTO con los datos del plan actualizado
-     * @throws EntityNotFoundException si el plan no existe
+     * @throws EntityNotFoundException si el plan no existe o está eliminado
      * @throws IllegalArgumentException si el nuevo nombre ya está en uso
      */
-
     @Transactional
     public PlanResponseDTO updatePlan(Long id, PlanRequestDTO planRequestDTO, Long adminId) {
         Plan existingPlan = findPlanById(id);
 
-        if(!existingPlan.getName().equals(planRequestDTO.getName()) && planRepository.existsByName(planRequestDTO.getName())) {
+        if (!existingPlan.getName().equals(planRequestDTO.getName())
+                && planRepository.existsByNameAndDeletedFalse(planRequestDTO.getName())) {
             throw new IllegalArgumentException("Ya existe un plan con el nombre: " + planRequestDTO.getName());
         }
 
@@ -187,30 +186,38 @@ public class PlanService {
         existingPlan.setStatus(planRequestDTO.getStatus());
 
         Plan savedPlan = planRepository.save(existingPlan);
-        planAuditService.registerAudit(savedPlan, adminId, AuditAction.update, "Se actualizó el plan: " + savedPlan.getName());
+        planAuditService.registerAudit(savedPlan, adminId, AuditAction.update,
+                "Se actualizó el plan: " + savedPlan.getName());
 
         return toResponseDTO(savedPlan);
     }
 
     /**
-     * Elimina un plan del sistema si no está asignado a ningún organizador (HU41).
+     * Elimina lógicamente un plan del sistema si no está asignado a ningún organizador (HU41).
      *
-     * <p>Registra la acción en la bitácora de auditoría antes de eliminar.</p>
+     * <p>Marca el plan como eliminado sin borrarlo físicamente de la base de datos,
+     * conservando la integridad de la auditoría. Registra la acción en la bitácora.</p>
      *
      * @param id ID del plan a eliminar
      * @param adminId ID del administrador que realiza la acción
-     * @throws EntityNotFoundException si el plan no existe
+     * @param reason motivo de la eliminación
+     * @throws EntityNotFoundException si el plan no existe o está eliminado
      * @throws IllegalStateException si el plan está asignado a algún organizador
      */
     @Transactional
-    public void deletePlan(Long id, Long adminId) {
+    public void deletePlan(Long id, Long adminId, String reason) {
         Plan plan = findPlanById(id);
 
         if (userPlanRepository.existsByPlanIdPlan(id)) {
-            throw new IllegalStateException("No se puede elimianr el plan porque esta asignado a uno o más organizadores.");
+            throw new IllegalStateException(
+                    "No se puede eliminar el plan porque está asignado a uno o más organizadores.");
         }
 
-        planAuditService.registerAudit(plan, adminId, AuditAction.delete, "Se eliminó el plan: " + plan.getName());
-        planRepository.deleteById(id);
+        plan.setDeleted(true);
+        plan.setStatus(PlanStatus.inactive);
+        planRepository.save(plan);
+
+        planAuditService.registerAudit(plan, adminId, AuditAction.delete,
+                "El plan fue eliminado. Motivo: " + reason);
     }
 }

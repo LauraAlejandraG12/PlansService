@@ -1,4 +1,4 @@
-package com.plan.qv_ms_plans.model.dto;
+package com.plan.qv_ms_plans.model.dto.plans;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

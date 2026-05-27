@@ -8,49 +8,41 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repositorio para la gestión de planes en la base de datos.
  *
  * <p>Extiende {@link JpaRepository} para heredar las operaciones CRUD básicas
- * y {@link JpaSpecificationExecutor} para permitir filtros combinados dinámicos.</p>
+ * y {@link JpaSpecificationExecutor} para permitir filtros combinados dinámicos.
+ * Todos los métodos filtran por {@code deleted = false} para implementar soft delete.</p>
  *
  * @author Equipo Qvenly
  * @version Eilyn Florez
  */
-
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long>, JpaSpecificationExecutor<Plan> {
-    /**
-     * Busca planes cuyo nombre contenga el texto indicado, sin distinguir mayúsculas.
-     *
-     * @param name texto a buscar en el nombre del plan
-     * @return lista de planes que coinciden con el criterio
-     */
-    List<Plan> findByNameContainingIgnoreCase(String name);
 
     /**
-     * Busca planes por estado.
+     * Busca todos los planes no eliminados.
      *
-     * @param status estado del plan a filtrar
-     * @return lista de planes con el estado indicado
+     * @return lista de planes activos e inactivos no eliminados
      */
-    List<Plan> findByStatus(PlanStatus status);
+    List<Plan> findByDeletedFalse();
 
     /**
-     * Busca planes cuyo precio esté dentro de un rango determinado.
+     * Busca un plan por ID que no esté eliminado.
      *
-     * @param minPrice precio mínimo del rango
-     * @param maxPrice precio máximo del rango
-     * @return lista de planes dentro del rango de precios
+     * @param id ID del plan
+     * @return plan encontrado si existe y no está eliminado
      */
-    List<Plan> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+    Optional<Plan> findByIdPlanAndDeletedFalse(Long id);
 
     /**
-     * Verifica si existe algún plan con el nombre exacto indicado.
+     * Verifica si existe algún plan con el nombre exacto indicado que no esté eliminado.
      *
      * @param name nombre del plan a verificar
      * @return {@code true} si ya existe un plan con ese nombre
      */
-    boolean existsByName(String name);
+    boolean existsByNameAndDeletedFalse(String name);
 }

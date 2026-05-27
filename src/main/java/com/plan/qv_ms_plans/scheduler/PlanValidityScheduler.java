@@ -7,7 +7,7 @@ import com.plan.qv_ms_plans.model.enums.AuditAction;
 import com.plan.qv_ms_plans.model.enums.UserPlanStatus;
 import com.plan.qv_ms_plans.repository.PlanHistoryRepository;
 import com.plan.qv_ms_plans.repository.UserPlanRepository;
-import com.plan.qv_ms_plans.service.PlanAuditService;
+import com.plan.qv_ms_plans.service.plans.PlanAuditService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

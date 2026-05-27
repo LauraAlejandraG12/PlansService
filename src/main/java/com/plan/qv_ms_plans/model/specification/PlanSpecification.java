@@ -13,17 +13,16 @@ import java.util.List;
  * Clase de especificaciones para el filtrado dinámico y combinado de planes.
  *
  * <p>Permite combinar múltiples criterios de búsqueda en una sola consulta,
- * como nombre, estado y rango de precios simultáneamente (HU38).</p>
+ * como nombre, estado y rango de precios simultáneamente (HU38).
+ * Siempre filtra por {@code deleted = false} para implementar soft delete.</p>
  *
  * @author Equipo Qvenly
  * @version Eilyn Florez
  */
-
 public class PlanSpecification {
+
     /**
      * Construye una {@link Specification} con los criterios de filtrado indicados.
-     *
-     * <p>Cada criterio es opcional. Solo se aplican los que no sean nulos.</p>
      *
      * @param name texto a buscar en el nombre del plan
      * @param status estado del plan a filtrar
@@ -31,11 +30,13 @@ public class PlanSpecification {
      * @param maxPrice precio máximo del rango
      * @return especificación con los filtros combinados
      */
-
     public static Specification<Plan> filterBy(String name, PlanStatus status,
                                                BigDecimal minPrice, BigDecimal maxPrice) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            // Siempre filtrar por deleted = false
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
 
             if (name != null && !name.isBlank()) {
                 predicates.add(criteriaBuilder.like(
@@ -48,11 +49,13 @@ public class PlanSpecification {
             }
 
             if (minPrice != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+                        root.get("price"), minPrice));
             }
 
             if (maxPrice != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(
+                        root.get("price"), maxPrice));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

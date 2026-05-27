@@ -1,9 +1,9 @@
-package com.plan.qv_ms_plans.service;
+package com.plan.qv_ms_plans.service.plans;
 
 
-import com.plan.qv_ms_plans.model.dto.PlanResponseDTO;
-import com.plan.qv_ms_plans.model.dto.UserPlanRequestDTO;
-import com.plan.qv_ms_plans.model.dto.UserPlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.UserPlanRequestDTO;
+import com.plan.qv_ms_plans.model.dto.plans.UserPlanResponseDTO;
 import com.plan.qv_ms_plans.model.entity.Plan;
 import com.plan.qv_ms_plans.model.entity.PlanHistory;
 import com.plan.qv_ms_plans.model.entity.UserPlan;
@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Servicio para la gestión de planes asignados a organizadores.
@@ -92,11 +91,20 @@ public class UserPlanService {
         userPlanResponseDTO.setCreatedAt(userPlan.getCreatedAt());
 
         PlanResponseDTO planResponseDTO = new PlanResponseDTO();
+
         planResponseDTO.setIdPlan(userPlan.getPlan().getIdPlan());
         planResponseDTO.setName(userPlan.getPlan().getName());
+        planResponseDTO.setDescription(userPlan.getPlan().getDescription());
         planResponseDTO.setPrice(userPlan.getPlan().getPrice());
         planResponseDTO.setDurationDays(userPlan.getPlan().getDurationDays());
+        planResponseDTO.setMaxOrganizers(userPlan.getPlan().getMaxOrganizers());
+        planResponseDTO.setMaxParticipants(userPlan.getPlan().getMaxParticipants());
+        planResponseDTO.setMaxJudges(userPlan.getPlan().getMaxJudges());
+        planResponseDTO.setMaxAttendees(userPlan.getPlan().getMaxAttendees());
+        planResponseDTO.setMaxStaff(userPlan.getPlan().getMaxStaff());
         planResponseDTO.setStatus(userPlan.getPlan().getStatus());
+        planResponseDTO.setCreatedAt(userPlan.getPlan().getCreatedAt());
+        planResponseDTO.setUpdatedAt(userPlan.getPlan().getUpdatedAt());
         userPlanResponseDTO.setPlan(planResponseDTO);
 
         return userPlanResponseDTO;

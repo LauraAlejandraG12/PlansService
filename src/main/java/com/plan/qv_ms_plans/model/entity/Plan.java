@@ -85,6 +85,13 @@ public class Plan {
     private Integer maxStaff = 0;
 
     /**
+     * Indica si el plan fue eliminado lógicamente del sistema.
+     * Los planes eliminados no aparecen en las consultas normales.
+     */
+    @Column(name = "deleted")
+    private Boolean deleted = false;
+
+    /**
      * Estado actual del plan. Por defecto es {@code active}.
      */
     @Enumerated(EnumType.STRING)

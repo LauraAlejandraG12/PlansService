@@ -1,9 +1,9 @@
-package com.plan.qv_ms_plans.controller;
+package com.plan.qv_ms_plans.controller.plans;
 
-import com.plan.qv_ms_plans.model.dto.MessageResponseDTO;
-import com.plan.qv_ms_plans.model.dto.PlanAuditResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.MessageResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.PlanAuditResponseDTO;
 import com.plan.qv_ms_plans.model.enums.AuditAction;
-import com.plan.qv_ms_plans.service.PlanAuditService;
+import com.plan.qv_ms_plans.service.plans.PlanAuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +29,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlanAuditController {
     private final PlanAuditService planAuditService;
+
+    /**
+     * Retorna todos los registros de auditoría del sistema (HU48).
+     * Requiere rol ADMIN.
+     *
+     * @return lista de todos los registros de auditoría con HTTP 200
+     */
+    @GetMapping
+    public ResponseEntity<MessageResponseDTO<List<PlanAuditResponseDTO>>> getAllAudits() {
+        log.info("Consultando todos los registros de auditoría");
+        List<PlanAuditResponseDTO> audits = planAuditService.getAllAudits();
+        return ResponseEntity.ok(MessageResponseDTO.success(
+                "Registros de auditoría obtenidos exitosamente.", audits));
+    }
+
 
     /**
      * Retorna todos los registros de auditoría de un plan específico (HU48).

@@ -1,4 +1,4 @@
-package com.plan.qv_ms_plans.model.dto;
+package com.plan.qv_ms_plans.model.dto.plans;
 
 import com.plan.qv_ms_plans.model.enums.PlanStatus;
 import jakarta.validation.constraints.*;
