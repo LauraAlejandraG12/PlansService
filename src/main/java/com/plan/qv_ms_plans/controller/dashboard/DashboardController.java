@@ -43,7 +43,7 @@ public class DashboardController {
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) String plan
     ){
-        return ResponseEntity.ok(dashboardService.getOrganizersByPlan());
+        return ResponseEntity.ok(dashboardService.getOrganizersByPlan(startDate, endDate, plan));
     }
 
     /**
@@ -53,8 +53,12 @@ public class DashboardController {
      * @return lista de organizadores con su cantidad de eventos y top organizador
      */
     @GetMapping("/organizers")
-    public ResponseEntity<EventByOrganizerResponseDTO> getEventsByOrganizer() {
-        return ResponseEntity.ok(dashboardService.getEventByOrganizer());
+    public ResponseEntity<EventByOrganizerResponseDTO> getEventsByOrganizer(
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @RequestParam(required = false) String plan
+    ) {
+        return ResponseEntity.ok(dashboardService.getEventByOrganizer(startDate, endDate, plan));
     }
 
     /**
