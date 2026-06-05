@@ -81,12 +81,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--Reporte Excel-->
 		<dependency>
     		<groupId>org.apache.poi</groupId>
     		<artifactId>poi-ooxml</artifactId>
     		<version>5.2.3</version>
 		</dependency>
 
+		<!--Reporte PDF-->
 		<dependency>
     		<groupId>org.apache.pdfbox</groupId>
     		<artifactId>pdfbox</artifactId>
