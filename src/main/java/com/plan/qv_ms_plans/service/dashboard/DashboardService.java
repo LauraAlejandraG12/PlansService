@@ -36,8 +36,8 @@ public class DashboardService {
      *
      * @return objeto con la lista de planes y el plan destacado
      */
-    public PlanStatsResponseDTO getOrganizersByPlan(){
-        List<PlanStatsDTO> plans = userClient.getOrganizersByPlan();
+    public PlanStatsResponseDTO getOrganizersByPlan(String startDate, String endDate, String plan){
+        List<PlanStatsDTO> plans = userClient.getOrganizersByPlan(startDate, endDate, plan);
 
         String featuredPlan = plans.stream()
                 .max(Comparator.comparingLong(PlanStatsDTO::getNumberOrganizers))
@@ -53,8 +53,8 @@ public class DashboardService {
      *
      * @return objeto con la lista de organizadores y el top organizador
      */
-    public EventByOrganizerResponseDTO getEventByOrganizer(){
-        List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer();
+    public EventByOrganizerResponseDTO getEventByOrganizer(String startDate, String endDate, String plan){
+        List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer(startDate, endDate, plan);
 
         Long maxEvents = organizers.stream()
                 .mapToLong(EventByOrganizerDTO::getNumberEvents)

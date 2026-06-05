@@ -45,7 +45,7 @@ public class ReportService {
      * @return arreglo de bytes con el archivo Excel generado
      * @throws IOException si ocurre un error al generar el archivo
      */
-    public byte[] generateExel() throws IOException {
+    public byte[] generateExcel(String startDate, String endDate, String plan) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         CellStyle headerStyle = workbook.createCellStyle();
@@ -101,12 +101,12 @@ public class ReportService {
             plansSheet.setColumnWidth(i, 6000);
         }
 
-        var plans = dashboardService.getOrganizersByPlan();
+        var plansResult = dashboardService.getOrganizersByPlan(startDate, endDate, plan);
         int plansRowNum = 1;
-        for (var plan : plans.getPlans()) {
+        for (var planItem : plansResult.getPlans()) {
             Row row = plansSheet.createRow(plansRowNum++);
-            row.createCell(0).setCellValue(plan.getPlanName());
-            row.createCell(1).setCellValue(plan.getNumberOrganizers());
+            row.createCell(0).setCellValue(planItem.getPlanName());
+            row.createCell(1).setCellValue(planItem.getNumberOrganizers());
         }
 
         // hoja 3: EVENTOS POR ORGANIZADOR
@@ -124,7 +124,7 @@ public class ReportService {
             organizersSheet.setColumnWidth(i, 6000);
         }
 
-        var organizers = dashboardService.getEventByOrganizer();
+        var organizers = dashboardService.getEventByOrganizer(startDate, endDate, plan);
         int organizerRowNum = 1;
         for (var organizer : organizers.getOrganizers()) {
             Row row = organizersSheet.createRow(organizerRowNum++);
@@ -204,7 +204,7 @@ public class ReportService {
     private static final float[] WHITE   = { 1f, 1f, 1f };
     private static final float[] BORDER  = { 0.87f, 0.87f, 0.87f };
 
-    public byte[] generatePdf() throws IOException {
+    public byte[] generatePdf(String startDate, String endDate, String plan) throws IOException {
         PDDocument document = new PDDocument();
  
         PDType1Font fontBold    = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
@@ -360,8 +360,8 @@ public class ReportService {
         try (PDPageContentStream cs = new PDPageContentStream(document, page3)) {
             dibujarEncabezado(cs, fontBold, fontRegular, "Organizadores por Plan");
  
-            var plans = dashboardService.getOrganizersByPlan();
-            dibujarBadge(cs, fontBold, "Plan más utilizado: " + plans.getFeaturedPlan(), 700);
+            var plansResult = dashboardService.getOrganizersByPlan(startDate, endDate, plan);
+            dibujarBadge(cs, fontBold, "Plan más utilizado: " + plansResult.getFeaturedPlan(), 700);
  
             String[] headers = { "Plan", "Organizadores" };
             float[] widths   = { 350f, 145f };
@@ -370,9 +370,9 @@ public class ReportService {
             dibujarCabeceraMultiple(cs, fontBold, headers, widths, ty);
             ty -= 28;
             boolean alt = false;
-            for (var plan : plans.getPlans()) {
+            for (var planItem : plansResult.getPlans()) {
                 dibujarFilaMultiple(cs, fontRegular,
-                        new String[]{ plan.getPlanName(), String.valueOf(plan.getNumberOrganizers()) },
+                        new String[]{ planItem.getPlanName(), String.valueOf(planItem.getNumberOrganizers()) },
                         widths, ty, alt);
                 ty -= 26;
                 alt = !alt;
@@ -386,7 +386,7 @@ public class ReportService {
         try (PDPageContentStream cs = new PDPageContentStream(document, page4)) {
             dibujarEncabezado(cs, fontBold, fontRegular, "Eventos por Organizador");
  
-            var orgs = dashboardService.getEventByOrganizer();
+            var orgs = dashboardService.getEventByOrganizer(startDate, endDate, plan);
             dibujarBadge(cs, fontBold, "Top organizador: " + orgs.getTopOrganizer(), 700);
  
             String[] headers = { "Organizador", "Eventos" };
@@ -412,7 +412,7 @@ public class ReportService {
         try (PDPageContentStream cs = new PDPageContentStream(document, page5)) {
             dibujarEncabezado(cs, fontBold, fontRegular, "Crecimiento Mensual");
  
-            var growth = dashboardService.getMonthlyGrowth(null, null);
+            var growth = dashboardService.getMonthlyGrowth(startDate, endDate);
             dibujarBadge(cs, fontBold, "Mes con mayor crecimiento: " + growth.getPeakMonth(), 700);
  
             String[] headers = { "Mes", "Nuevos Usuarios" };
