@@ -217,6 +217,52 @@ public class UserPlanService {
     }
 
     /**
+     * Cambia el plan activo de un organizador por uno nuevo (HU43).
+     *
+     * <p>Cancela el plan activo actual, registra el cambio en el historial
+     * y asigna el nuevo plan al organizador.</p>
+     *
+     * @param userId ID del organizador
+     * @param newPlanId ID del nuevo plan a asignar
+     * @param startDate fecha de inicio del nuevo plan
+     * @param reason motivo del cambio de plan
+     * @param executorId ID del usuario que realiza el cambio
+     * @return DTO con los datos del nuevo plan asignado
+     * @throws EntityNotFoundException si no tiene plan activo
+     * @throws IllegalStateException si el nuevo plan no está activo
+     */
+    @Transactional
+    public UserPlanResponseDTO changePlan(Long userId, Long newPlanId, LocalDate startDate, String reason, Long executorId) {
+
+        // Busca y cancela el plan activo actual
+        UserPlan currentPlan = userPlanRepository
+                .findByUserIdAndStatus(userId, UserPlanStatus.active)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "El organizador con ID: " + userId + " no tiene un plan activo."));
+
+        String oldPlanName = currentPlan.getPlan().getName();
+        currentPlan.setStatus(UserPlanStatus.cancelled);
+        userPlanRepository.save(currentPlan);
+        saveHistory(currentPlan, "Plan cancelado por cambio de plan. Motivo: " + reason);
+
+        // Asigna el nuevo plan
+        Plan newPlan = planService.findPlanById(newPlanId);
+        if (!newPlan.getStatus().name().equals("active")) {
+            throw new IllegalStateException("No se puede asignar un plan inactivo.");
+        }
+
+        UserPlan newUserPlan = buildUserPlan(userId, newPlan, startDate);
+        UserPlan savedUserPlan = userPlanRepository.save(newUserPlan);
+        saveHistory(savedUserPlan, "Nuevo plan asignado por cambio de plan. Motivo: " + reason);
+
+        planAuditService.registerAudit(newPlan, executorId, AuditAction.assign,
+                "Cambio de plan: '" + oldPlanName + "' → '" + newPlan.getName() +
+                        "' para el organizador ID: " + userId + ". Motivo: " + reason);
+
+        return toResponseDTO(savedUserPlan);
+    }
+
+    /**
      * Retorna el plan activo de un organizador específico.
      *
      * @param userId ID del organizador

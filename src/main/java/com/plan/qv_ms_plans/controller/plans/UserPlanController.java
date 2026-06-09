@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 /**
  * Controlador REST para la gestión de planes asignados a organizadores (HU42, HU43).
  *
@@ -69,6 +71,30 @@ public class UserPlanController {
         log.info("Renovando plan asignado ID: {} por usuario ID: {}", userPlanId, executorId);
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.renewPlan(userPlanId, executorId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan renovado exitosamente.", userPlanResponseDTO));
+    }
+
+    /**
+     * Cambia el plan activo de un organizador por uno nuevo.
+     *
+     * @param userId ID del organizador
+     * @param newPlanId ID del nuevo plan
+     * @param startDate fecha de inicio del nuevo plan
+     * @param reason motivo del cambio
+     * @param executorId ID del usuario que realiza el cambio
+     * @return nuevo plan asignado con HTTP 200
+     */
+    @PutMapping("/user/{userId}/change-plan")
+    public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> changePlan(
+            @PathVariable Long userId,
+            @RequestParam Long newPlanId,
+            @RequestParam String startDate,
+            @RequestParam String reason,
+            @RequestHeader("X-User-Id") Long executorId) {
+        log.info("Cambiando plan del organizador ID: {} al plan ID: {}", userId, newPlanId);
+        UserPlanResponseDTO response = userPlanService.changePlan(
+                userId, newPlanId, LocalDate.parse(startDate), reason, executorId);
+        return ResponseEntity.ok(MessageResponseDTO.success(
+                "Plan cambiado exitosamente.", response));
     }
 
     /**
