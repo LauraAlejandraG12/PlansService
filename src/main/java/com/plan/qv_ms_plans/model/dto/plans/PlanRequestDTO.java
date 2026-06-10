@@ -45,6 +45,12 @@ public class PlanRequestDTO {
     private Integer durationDays;
 
     /**
+     * Cantidad máxima de eventos permitidos.
+     */
+    @Min(value = 0, message = "El valor no puede ser negativo.")
+    private Integer maxEvents;
+
+    /**
      * Cantidad máxima de organizadores permitidos.
      */
     @Min(value = 0, message = "El valor no puede ser negativo.")

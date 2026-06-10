@@ -1,6 +1,7 @@
 package com.plan.qv_ms_plans.model.dto.plans;
 
 import com.plan.qv_ms_plans.model.enums.PlanStatus;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -32,6 +33,9 @@ public class PlanResponseDTO {
 
     /** Duración del plan en días. */
     private Integer durationDays;
+
+    /** Cantidad máxima de eventos permitidos */
+    private Integer maxEvents;
 
     /** Cantidad máxima de organizadores. */
     private Integer maxOrganizers;

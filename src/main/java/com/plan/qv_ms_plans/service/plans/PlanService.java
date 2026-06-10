@@ -46,6 +46,7 @@ public class PlanService {
         planResponseDTO.setDescription(plan.getDescription());
         planResponseDTO.setPrice(plan.getPrice());
         planResponseDTO.setDurationDays(plan.getDurationDays());
+        planResponseDTO.setMaxEvents(plan.getMaxEvents());
         planResponseDTO.setMaxOrganizers(plan.getMaxOrganizers());
         planResponseDTO.setMaxParticipants(plan.getMaxParticipants());
         planResponseDTO.setMaxJudges(plan.getMaxJudges());
@@ -79,6 +80,7 @@ public class PlanService {
         plan.setDescription(planRequestDTO.getDescription());
         plan.setPrice(planRequestDTO.getPrice());
         plan.setDurationDays(planRequestDTO.getDurationDays());
+        plan.setMaxEvents(planRequestDTO.getMaxEvents());
         plan.setMaxOrganizers(planRequestDTO.getMaxOrganizers());
         plan.setMaxParticipants(planRequestDTO.getMaxParticipants());
         plan.setMaxJudges(planRequestDTO.getMaxJudges());
@@ -178,6 +180,7 @@ public class PlanService {
         existingPlan.setDescription(planRequestDTO.getDescription());
         existingPlan.setPrice(planRequestDTO.getPrice());
         existingPlan.setDurationDays(planRequestDTO.getDurationDays());
+        existingPlan.setMaxEvents(planRequestDTO.getMaxEvents());
         existingPlan.setMaxOrganizers(planRequestDTO.getMaxOrganizers());
         existingPlan.setMaxParticipants(planRequestDTO.getMaxParticipants());
         existingPlan.setMaxJudges(planRequestDTO.getMaxJudges());
@@ -219,6 +222,13 @@ public class PlanService {
         }
         if (!existingPlan.getDescription().equals(planRequestDTO.getDescription())) {
             description.append("Descripción actualizada. ");
+        }
+        if (!existingPlan.getMaxEvents().equals(planRequestDTO.getMaxEvents())) {
+            description.append("Máx. Eventos: '")
+                    .append(existingPlan.getMaxEvents())
+                    .append("' → '")
+                    .append(planRequestDTO.getMaxEvents())
+                    .append("'. ");
         }
         if (!existingPlan.getMaxOrganizers().equals(planRequestDTO.getMaxOrganizers())) {
             description.append("Máx. Organizadores: '")

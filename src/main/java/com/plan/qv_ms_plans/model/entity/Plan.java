@@ -54,6 +54,10 @@ public class Plan {
     @Column(name = "duration_days", nullable = false)
     private Integer durationDays;
 
+    /** Cantidad máxima de eventos permitidos en el plan */
+    @Column(name = "max_events", nullable = false)
+    private Integer maxEvents = 0;
+
     /**
      * Cantidad máxima de organizadores permitidos en el plan.
      */
