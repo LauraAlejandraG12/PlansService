@@ -176,6 +176,67 @@ public class PlanService {
             throw new IllegalArgumentException("Ya existe un plan con el nombre: " + planRequestDTO.getName());
         }
 
+        // Guarda los valores originales ANTES de modificar la entidad
+        String oldName = existingPlan.getName();
+        String oldDescription = existingPlan.getDescription();
+        BigDecimal oldPrice = existingPlan.getPrice();
+        Integer oldDurationDays = existingPlan.getDurationDays();
+        Integer oldMaxEvents = existingPlan.getMaxEvents();
+        Integer oldMaxOrganizers = existingPlan.getMaxOrganizers();
+        Integer oldMaxParticipants = existingPlan.getMaxParticipants();
+        Integer oldMaxJudges = existingPlan.getMaxJudges();
+        Integer oldMaxAttendees = existingPlan.getMaxAttendees();
+        Integer oldMaxStaff = existingPlan.getMaxStaff();
+        String oldStatus = existingPlan.getStatus().name();
+
+        // Construye la descripción comparando valores originales vs nuevos
+        StringBuilder description = new StringBuilder("Se actualizó el plan: " + oldName + ". Cambios: ");
+
+        if (!oldName.equals(planRequestDTO.getName())) {
+            description.append("Nombre: '").append(oldName)
+                    .append("' → '").append(planRequestDTO.getName()).append("'. ");
+        }
+        if (oldPrice.compareTo(planRequestDTO.getPrice()) != 0) {
+            description.append("Precio: '").append(oldPrice)
+                    .append("' → '").append(planRequestDTO.getPrice()).append("'. ");
+        }
+        if (!oldDurationDays.equals(planRequestDTO.getDurationDays())) {
+            description.append("Duración: '").append(oldDurationDays)
+                    .append(" días' → '").append(planRequestDTO.getDurationDays()).append(" días'. ");
+        }
+        if (!oldStatus.equals(planRequestDTO.getStatus().name())) {
+            description.append("Estado: '").append(oldStatus)
+                    .append("' → '").append(planRequestDTO.getStatus().name()).append("'. ");
+        }
+        if (!oldDescription.equals(planRequestDTO.getDescription())) {
+            description.append("Descripción actualizada. ");
+        }
+        if (!oldMaxEvents.equals(planRequestDTO.getMaxEvents())) {
+            description.append("Máx. Eventos: '").append(oldMaxEvents)
+                    .append("' → '").append(planRequestDTO.getMaxEvents()).append("'. ");
+        }
+        if (!oldMaxOrganizers.equals(planRequestDTO.getMaxOrganizers())) {
+            description.append("Máx. Organizadores: '").append(oldMaxOrganizers)
+                    .append("' → '").append(planRequestDTO.getMaxOrganizers()).append("'. ");
+        }
+        if (!oldMaxAttendees.equals(planRequestDTO.getMaxAttendees())) {
+            description.append("Máx. Asistentes: '").append(oldMaxAttendees)
+                    .append("' → '").append(planRequestDTO.getMaxAttendees()).append("'. ");
+        }
+        if (!oldMaxParticipants.equals(planRequestDTO.getMaxParticipants())) {
+            description.append("Máx. Participantes: '").append(oldMaxParticipants)
+                    .append("' → '").append(planRequestDTO.getMaxParticipants()).append("'. ");
+        }
+        if (!oldMaxJudges.equals(planRequestDTO.getMaxJudges())) {
+            description.append("Máx. Jueces: '").append(oldMaxJudges)
+                    .append("' → '").append(planRequestDTO.getMaxJudges()).append("'. ");
+        }
+        if (!oldMaxStaff.equals(planRequestDTO.getMaxStaff())) {
+            description.append("Máx. Personal: '").append(oldMaxStaff)
+                    .append("' → '").append(planRequestDTO.getMaxStaff()).append("'. ");
+        }
+
+        // Ahora sí modifica la entidad
         existingPlan.setName(planRequestDTO.getName());
         existingPlan.setDescription(planRequestDTO.getDescription());
         existingPlan.setPrice(planRequestDTO.getPrice());
@@ -189,84 +250,8 @@ public class PlanService {
         existingPlan.setStatus(planRequestDTO.getStatus());
 
         Plan savedPlan = planRepository.save(existingPlan);
-        // Construye descripción con valores anteriores y nuevos
-        StringBuilder description = new StringBuilder("Se actualizó el plan: " + existingPlan.getName() + ". Cambios: ");
 
-        if (!existingPlan.getName().equals(planRequestDTO.getName())) {
-            description.append("Nombre: '")
-                    .append(existingPlan.getName())
-                    .append("' → '")
-                    .append(planRequestDTO.getName())
-                    .append("'. ");
-        }
-        if (existingPlan.getPrice().compareTo(planRequestDTO.getPrice()) != 0) {
-            description.append("Precio: '")
-                    .append(existingPlan.getPrice())
-                    .append("' → '")
-                    .append(planRequestDTO.getPrice())
-                    .append("'. ");
-        }
-        if (!existingPlan.getDurationDays().equals(planRequestDTO.getDurationDays())) {
-            description.append("Duración: '")
-                    .append(existingPlan.getDurationDays())
-                    .append(" días' → '")
-                    .append(planRequestDTO.getDurationDays())
-                    .append(" días'. ");
-        }
-        if (!existingPlan.getStatus().name().equals(planRequestDTO.getStatus().name())) {
-            description.append("Estado: '")
-                    .append(existingPlan.getStatus().name())
-                    .append("' → '")
-                    .append(planRequestDTO.getStatus().name())
-                    .append("'. ");
-        }
-        if (!existingPlan.getDescription().equals(planRequestDTO.getDescription())) {
-            description.append("Descripción actualizada. ");
-        }
-        if (!existingPlan.getMaxEvents().equals(planRequestDTO.getMaxEvents())) {
-            description.append("Máx. Eventos: '")
-                    .append(existingPlan.getMaxEvents())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxEvents())
-                    .append("'. ");
-        }
-        if (!existingPlan.getMaxOrganizers().equals(planRequestDTO.getMaxOrganizers())) {
-            description.append("Máx. Organizadores: '")
-                    .append(existingPlan.getMaxOrganizers())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxOrganizers())
-                    .append("'. ");
-        }
-        if (!existingPlan.getMaxAttendees().equals(planRequestDTO.getMaxAttendees())) {
-            description.append("Máx. Asistentes: '")
-                    .append(existingPlan.getMaxAttendees())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxAttendees())
-                    .append("'. ");
-        }
-        if (!existingPlan.getMaxParticipants().equals(planRequestDTO.getMaxParticipants())) {
-            description.append("Máx. Participantes: '")
-                    .append(existingPlan.getMaxParticipants())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxParticipants())
-                    .append("'. ");
-        }
-        if (!existingPlan.getMaxJudges().equals(planRequestDTO.getMaxJudges())) {
-            description.append("Máx. Jueces: '")
-                    .append(existingPlan.getMaxJudges())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxJudges())
-                    .append("'. ");
-        }
-        if (!existingPlan.getMaxStaff().equals(planRequestDTO.getMaxStaff())) {
-            description.append("Máx. Personal: '")
-                    .append(existingPlan.getMaxStaff())
-                    .append("' → '")
-                    .append(planRequestDTO.getMaxStaff())
-                    .append("'. ");
-        }
-
-        planAuditService.registerAudit(existingPlan, adminId, AuditAction.update, description.toString());
+        planAuditService.registerAudit(savedPlan, adminId, AuditAction.update, description.toString());
 
         return toResponseDTO(savedPlan);
     }
