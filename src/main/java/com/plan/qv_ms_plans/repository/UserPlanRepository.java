@@ -57,4 +57,12 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
      * @return {@code true} si el plan está asignado a algún organizador
      */
     boolean existsByPlanIdPlan(Long planId);
+
+    /**
+     * Busca todas las asignaciones activas de un plan específico (RF25.2).
+     *
+     * @param planId ID del plan
+     * @return lista de asignaciones del plan
+     */
+    List<UserPlan> findByPlanIdPlanAndStatus(Long planId, UserPlanStatus status);
 }

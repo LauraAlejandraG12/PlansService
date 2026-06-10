@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Servicio para la gestión de planes asignados a organizadores.
@@ -275,5 +276,19 @@ public class UserPlanService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "El organizador con ID: " + userId + " no tiene un plan activo."));
         return toResponseDTO(userPlan);
+    }
+
+    /**
+     * Retorna todos los organizadores que tienen asignado un plan activo (RF25.2).
+     *
+     * @param planId ID del plan
+     * @return lista de asignaciones activas del plan
+     */
+    public List<UserPlanResponseDTO> getOrganizersByPlan(Long planId) {
+        return userPlanRepository
+                .findByPlanIdPlanAndStatus(planId, UserPlanStatus.active)
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 }

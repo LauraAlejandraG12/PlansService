@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Controlador REST para la gestión de planes asignados a organizadores (HU42, HU43).
@@ -108,5 +109,20 @@ public class UserPlanController {
         log.info("Consultando plan activo del organizador ID: {}", userId);
         UserPlanResponseDTO userPlanResponseDTO = userPlanService.getActivePlanByUser(userId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan activo del organizador obtenido exitosamente.", userPlanResponseDTO));
+    }
+
+    /**
+     * Retorna todos los organizadores que tienen asignado un plan (RF25.2).
+     *
+     * @param planId ID del plan
+     * @return lista de organizadores con HTTP 200
+     */
+    @GetMapping("/plan/{planId}")
+    public ResponseEntity<MessageResponseDTO<List<UserPlanResponseDTO>>> getOrganizersByPlan(
+            @PathVariable Long planId) {
+        log.info("Consultando organizadores del plan ID: {}", planId);
+        List<UserPlanResponseDTO> response = userPlanService.getOrganizersByPlan(planId);
+        return ResponseEntity.ok(MessageResponseDTO.success(
+                "Organizadores del plan obtenidos exitosamente.", response));
     }
 }
