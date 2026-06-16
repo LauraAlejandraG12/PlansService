@@ -8,6 +8,7 @@ import com.plan.qv_ms_plans.model.entity.Plan;
 import com.plan.qv_ms_plans.model.entity.PlanHistory;
 import com.plan.qv_ms_plans.model.entity.UserPlan;
 import com.plan.qv_ms_plans.model.enums.AuditAction;
+import com.plan.qv_ms_plans.model.enums.NotificationType;
 import com.plan.qv_ms_plans.model.enums.UserPlanStatus;
 import com.plan.qv_ms_plans.repository.PlanHistoryRepository;
 import com.plan.qv_ms_plans.repository.UserPlanRepository;
@@ -36,6 +37,7 @@ public class UserPlanService {
     private final PlanHistoryRepository planHistoryRepository;
     private final PlanService planService;
     private final PlanAuditService planAuditService;
+    private final NotificationService notificationService;
 
     /**
      * Construye una entidad {@link UserPlan} con los datos proporcionados.
@@ -169,6 +171,16 @@ public class UserPlanService {
         planAuditService.registerAudit(plan, organizerId, AuditAction.assign,
                 "El organizador ID: " + organizerId + " adquirió el plan: " + plan.getName());
 
+        notificationService.createNotification(
+                organizerId,
+                userPlanRequestDTO.getUserEmail(),
+                userPlanRequestDTO.getUserName(),
+                NotificationType.PLAN_PURCHASED,
+                "Compra exitosa",
+                "Tu plan '" + plan.getName() + "' fue adquirido exitosamente. " +
+                        "Estará activo hasta el " + savedUserPlan.getEndDate() + "."
+        );
+
         return toResponseDTO(savedUserPlan);
     }
 
@@ -199,7 +211,8 @@ public class UserPlanService {
      * @throws EntityNotFoundException si la asignación no existe
      */
     @Transactional
-    public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId) {
+    public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId,
+                                         String userEmail, String userName) {
         UserPlan userPlan = findUserPlanById(userPlanId);
 
         userPlan.setStartDate(LocalDate.now());
@@ -213,6 +226,16 @@ public class UserPlanService {
         planAuditService.registerAudit(userPlan.getPlan(), executorId, AuditAction.renew,
                 "Se renovó el plan: " + userPlan.getPlan().getName() +
                         " del organizador ID: " + userPlan.getUserId());
+
+        notificationService.createNotification(
+                userPlan.getUserId(),
+                userEmail,
+                userName,
+                NotificationType.PLAN_RENEWED,
+                "Renovación exitosa",
+                "Tu plan '" + userPlan.getPlan().getName() + "' fue renovado exitosamente. " +
+                        "Estará activo hasta el " + savedUserPlan.getEndDate() + "."
+        );
 
         return toResponseDTO(savedUserPlan);
     }
@@ -233,7 +256,7 @@ public class UserPlanService {
      * @throws IllegalStateException si el nuevo plan no está activo
      */
     @Transactional
-    public UserPlanResponseDTO changePlan(Long userId, Long newPlanId, LocalDate startDate, String reason, Long executorId) {
+    public UserPlanResponseDTO changePlan(Long userId, Long newPlanId, LocalDate startDate, String reason, Long executorId, String userEmail, String userName) {
 
         // Busca y cancela el plan activo actual
         UserPlan currentPlan = userPlanRepository
@@ -259,6 +282,16 @@ public class UserPlanService {
         planAuditService.registerAudit(newPlan, executorId, AuditAction.assign,
                 "Cambio de plan: '" + oldPlanName + "' → '" + newPlan.getName() +
                         "' para el organizador ID: " + userId + ". Motivo: " + reason);
+
+        notificationService.createNotification(
+                userId,
+                userEmail,
+                userName,
+                NotificationType.PLAN_CHANGED,
+                "Cambio de plan exitoso",
+                "Cambiaste del plan '" + oldPlanName + "' al plan '" + newPlan.getName() + "'. " +
+                        "Tu nuevo plan estará activo hasta el " + savedUserPlan.getEndDate() + "."
+        );
 
         return toResponseDTO(savedUserPlan);
     }

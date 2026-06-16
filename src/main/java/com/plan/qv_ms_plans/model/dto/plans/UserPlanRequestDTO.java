@@ -34,4 +34,16 @@ public class UserPlanRequestDTO {
      */
     @NotNull(message = "La fecha de inicio es obligatoria.")
     private LocalDate startDate;
+
+    /**
+     * Correo del usuario para el envío de la notificación.
+     * Opcional; lo envía el frontend cuando la acción la realiza el usuario.
+     */
+    private String userEmail;
+
+    /**
+     * Nombre del usuario para personalizar la notificación.
+     * Opcional; lo envía el frontend cuando la acción la realiza el usuario.
+     */
+    private String userName;
 }
