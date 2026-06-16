@@ -48,6 +48,7 @@ public class PlanHistoryService {
             planResponseDTO.setDescription(history.getPlan().getDescription());
             planResponseDTO.setPrice(history.getPlan().getPrice());
             planResponseDTO.setDurationDays(history.getPlan().getDurationDays());
+            planResponseDTO.setMaxEvents(history.getPlan().getMaxEvents());
             planResponseDTO.setMaxOrganizers(history.getPlan().getMaxOrganizers());
             planResponseDTO.setMaxParticipants(history.getPlan().getMaxParticipants());
             planResponseDTO.setMaxJudges(history.getPlan().getMaxJudges());

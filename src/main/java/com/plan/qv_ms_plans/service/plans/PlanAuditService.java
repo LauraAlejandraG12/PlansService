@@ -67,6 +67,7 @@ public class PlanAuditService {
             planResponseDTO.setDescription(audit.getPlan().getDescription());
             planResponseDTO.setPrice(audit.getPlan().getPrice());
             planResponseDTO.setDurationDays(audit.getPlan().getDurationDays());
+            planResponseDTO.setMaxEvents(audit.getPlan().getMaxEvents());
             planResponseDTO.setMaxOrganizers(audit.getPlan().getMaxOrganizers());
             planResponseDTO.setMaxParticipants(audit.getPlan().getMaxParticipants());
             planResponseDTO.setMaxJudges(audit.getPlan().getMaxJudges());
