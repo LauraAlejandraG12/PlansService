@@ -36,3 +36,8 @@ management:
       exposure:
         include: health, info
 
+services:
+  auth:
+    url: http://localhost:8080
+  events:
+    url: http://localhost:8084
