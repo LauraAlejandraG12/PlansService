@@ -3,13 +3,17 @@ package com.plan.qv_ms_plans.clients.mock;
 import com.plan.qv_ms_plans.clients.EventServiceClient;
 import com.plan.qv_ms_plans.model.dto.dashboard.EventByOrganizerDTO;
 import com.plan.qv_ms_plans.model.dto.dashboard.EventUserDetailDTO;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
+@Profile("dev")
 public class MockEventServiceClient implements EventServiceClient {
 
     @Override
@@ -18,7 +22,7 @@ public class MockEventServiceClient implements EventServiceClient {
     }
 
     @Override
-    public List<EventByOrganizerDTO> getEventsByOrganizer(String startDate, String endDate, String plan){
+    public List<EventByOrganizerDTO> getEventsByOrganizer(String startDate, String endDate){
         List<EventByOrganizerDTO> dataList = new ArrayList<>( List.of(
                 new EventByOrganizerDTO(1L, "Ana García", 8L),
                 new EventByOrganizerDTO(1L, "Diego Gonzales", 8L),

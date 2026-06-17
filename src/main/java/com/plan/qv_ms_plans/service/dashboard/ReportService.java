@@ -124,7 +124,7 @@ public class ReportService {
             organizersSheet.setColumnWidth(i, 6000);
         }
 
-        var organizers = dashboardService.getEventByOrganizer(startDate, endDate, plan);
+        var organizers = dashboardService.getEventByOrganizer(startDate, endDate);
         int organizerRowNum = 1;
         for (var organizer : organizers.getOrganizers()) {
             Row row = organizersSheet.createRow(organizerRowNum++);
@@ -360,7 +360,7 @@ public class ReportService {
         try (PDPageContentStream cs = new PDPageContentStream(document, page3)) {
             dibujarEncabezado(cs, fontBold, fontRegular, "Organizadores por Plan");
  
-            var plansResult = dashboardService.getOrganizersByPlan(startDate, endDate, plan);
+            var plansResult = dashboardService.getOrganizersByPlan(startDate, endDate, null);
             dibujarBadge(cs, fontBold, "Plan más utilizado: " + plansResult.getFeaturedPlan(), 700);
  
             String[] headers = { "Plan", "Organizadores" };
@@ -386,7 +386,7 @@ public class ReportService {
         try (PDPageContentStream cs = new PDPageContentStream(document, page4)) {
             dibujarEncabezado(cs, fontBold, fontRegular, "Eventos por Organizador");
  
-            var orgs = dashboardService.getEventByOrganizer(startDate, endDate, plan);
+            var orgs = dashboardService.getEventByOrganizer(startDate, endDate);
             dibujarBadge(cs, fontBold, "Top organizador: " + orgs.getTopOrganizer(), 700);
  
             String[] headers = { "Organizador", "Eventos" };

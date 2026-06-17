@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface EventServiceClient {
     Long getTotalEvents();
-    List<EventByOrganizerDTO> getEventsByOrganizer(String startDate, String endDate, String plan);
+    List<EventByOrganizerDTO> getEventsByOrganizer(String startDate, String endDate);
     List<EventUserDetailDTO> getUsersByEvent();
 }
