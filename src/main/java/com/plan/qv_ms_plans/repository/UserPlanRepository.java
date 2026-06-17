@@ -3,6 +3,8 @@ package com.plan.qv_ms_plans.repository;
 import com.plan.qv_ms_plans.model.entity.UserPlan;
 import com.plan.qv_ms_plans.model.enums.UserPlanStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -65,4 +67,23 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
      * @return lista de asignaciones del plan
      */
     List<UserPlan> findByPlanIdPlanAndStatus(Long planId, UserPlanStatus status);
+
+
+     @Query("""
+        SELECT p.name, COUNT(up.userId)
+        FROM Plan p
+        LEFT JOIN UserPlan up ON up.plan = p
+            AND up.status = 'active'
+            AND (:startDate IS NULL OR up.startDate >= :startDate)
+            AND (:endDate   IS NULL OR up.endDate   <= :endDate)
+        WHERE p.deleted = false
+          AND p.status = 'active'
+          AND (:plan IS NULL OR LOWER(p.name) = LOWER(:plan))
+        GROUP BY p.name
+    """)
+    List<Object[]> countOrganizersByPlan(
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate")   LocalDate endDate,
+        @Param("plan")      String plan
+    );
 }
