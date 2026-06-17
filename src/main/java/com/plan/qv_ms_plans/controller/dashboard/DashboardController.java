@@ -58,7 +58,7 @@ public class DashboardController {
         @RequestParam(required = false) String endDate,
         @RequestParam(required = false) String plan
     ) {
-        return ResponseEntity.ok(dashboardService.getEventByOrganizer(startDate, endDate, plan));
+        return ResponseEntity.ok(dashboardService.getEventByOrganizer(startDate, endDate));
     }
 
     /**

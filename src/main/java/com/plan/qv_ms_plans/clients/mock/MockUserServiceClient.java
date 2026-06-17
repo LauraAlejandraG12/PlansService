@@ -4,12 +4,15 @@ import com.plan.qv_ms_plans.clients.UserServiceClient;
 import com.plan.qv_ms_plans.model.dto.dashboard.GeneralStatsDTO;
 import com.plan.qv_ms_plans.model.dto.dashboard.MonthlyGrowthDTO;
 import com.plan.qv_ms_plans.model.dto.dashboard.PlanStatsDTO;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Profile("dev")
 @Service
 public class MockUserServiceClient implements UserServiceClient {
     @Override

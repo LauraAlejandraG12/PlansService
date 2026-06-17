@@ -53,8 +53,8 @@ public class DashboardService {
      *
      * @return objeto con la lista de organizadores y el top organizador
      */
-    public EventByOrganizerResponseDTO getEventByOrganizer(String startDate, String endDate, String plan){
-        List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer(startDate, endDate, plan);
+    public EventByOrganizerResponseDTO getEventByOrganizer(String startDate, String endDate){
+        List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer(startDate, endDate);
 
         Long maxEvents = organizers.stream()
                 .mapToLong(EventByOrganizerDTO::getNumberEvents)
