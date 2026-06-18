@@ -166,6 +166,8 @@ public class UserPlanService {
         }
 
         UserPlan userPlan = buildUserPlan(organizerId, plan, userPlanRequestDTO.getStartDate());
+        userPlan.setUserEmail(userPlanRequestDTO.getUserEmail());
+        userPlan.setUserName(userPlanRequestDTO.getUserName());
         UserPlan savedUserPlan = userPlanRepository.save(userPlan);
 
         saveHistory(savedUserPlan, "Adquisición inicial del plan por el organizador.");
@@ -220,6 +222,8 @@ public class UserPlanService {
         userPlan.setEndDate(LocalDate.now().plusDays(userPlan.getPlan().getDurationDays()));
         userPlan.setStatus(UserPlanStatus.active);
         userPlan.setRenewal(true);
+        userPlan.setUserEmail(userEmail);
+        userPlan.setUserName(userName);
 
         UserPlan savedUserPlan = userPlanRepository.save(userPlan);
 
@@ -277,6 +281,8 @@ public class UserPlanService {
         }
 
         UserPlan newUserPlan = buildUserPlan(userId, newPlan, startDate);
+        newUserPlan.setUserEmail(userEmail);
+        newUserPlan.setUserName(userName);
         UserPlan savedUserPlan = userPlanRepository.save(newUserPlan);
         saveHistory(savedUserPlan, "Nuevo plan asignado por cambio de plan. Motivo: " + reason);
 

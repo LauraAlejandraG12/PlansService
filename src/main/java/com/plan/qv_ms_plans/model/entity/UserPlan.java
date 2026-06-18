@@ -37,6 +37,12 @@ public class UserPlan {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "user_email")
+    private String userEmail;
+
+    @Column(name = "user_name")
+    private String userName;
+
     /**
      * Plan asignado al organizador.
      */

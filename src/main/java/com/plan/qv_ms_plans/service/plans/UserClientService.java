@@ -11,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
  * Cliente para consultar información de usuarios en el auth-service.
  *
  * <p>Usa RestTemplate para obtener el nombre y correo de un usuario por su ID,
- * necesarios para generar notificaciones y enviar correos.</p>
+ * necesarios para generar notificaciones y enviar correos. Llama directamente
+ * al auth-service (sin pasar por el Gateway), ya que el scheduler no tiene
+ * sesión de usuario.</p>
  *
  * @author Equipo Qvenly
  * @version Eilyn Florez
@@ -23,9 +25,9 @@ public class UserClientService {
 
     private final RestTemplate restTemplate;
 
-    /** URL base del Gateway para consumir el auth-service. */
-    @Value("${gateway.url:http://localhost:9000}")
-    private String gatewayUrl;
+    /** URL base directa del auth-service (sin Gateway). */
+    @Value("${services.auth.url:http://localhost:8080}")
+    private String authUrl;
 
     /**
      * Consulta la información de un usuario por su ID en el auth-service.
@@ -36,7 +38,7 @@ public class UserClientService {
     @SuppressWarnings("unchecked")
     public UserInfoDTO getUserById(Long userId) {
         try {
-            String url = gatewayUrl + "/auth/users/" + userId;
+            String url = authUrl + "/auth/users/" + userId;
             var response = restTemplate.getForObject(url, java.util.Map.class);
 
             if (response == null || response.get("data") == null) {
