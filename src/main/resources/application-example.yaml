@@ -1,16 +1,16 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
-  profiles: 
+  profiles:
     active: prod
   application:
     name: qv-ms-plans
 
   datasource:
     url: jdbc:mysql://localhost:3306/plans_service?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: TU_USUARIO_MYSQL
-    password: TU_PASSWORD_MYSQL
+    username: root
+    password: YOUR_DB_PASSWORD
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -21,16 +21,29 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: YOUR_EMAIL@gmail.com
+    password: YOUR_GMAIL_APP_PASSWORD
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   cloud:
     consul:
       host: localhost
       port: 8500
       discovery:
-        service-name: qv-ms-planes
+        service-name: qv-ms-plans
         health-check-path: /actuator/health
         health-check-interval: 10s
         prefer-ip-address: true
+
+app:
+  frontend-url: http://localhost:4200
 
 management:
   endpoints:
@@ -43,3 +56,6 @@ services:
     url: http://localhost:8080
   events:
     url: http://localhost:8084
+
+internal:
+  api-key: YOUR_SHARED_INTERNAL_API_KEY

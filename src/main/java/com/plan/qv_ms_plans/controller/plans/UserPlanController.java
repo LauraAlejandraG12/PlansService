@@ -65,19 +65,13 @@ public class UserPlanController {
      *
      * @param userPlanId ID de la asignación a renovar
      * @param executorId ID del usuario que realiza la renovación
-     * @param userEmail correo del usuario para la notificación
-     * @param userName nombre del usuario para la notificación
      * @return asignación renovada con HTTP 200
      */
     @PutMapping("/{userPlanId}/renew")
     public ResponseEntity<MessageResponseDTO<UserPlanResponseDTO>> renewPlan(
             @PathVariable Long userPlanId,
-            @RequestHeader("X-User-Id") Long executorId,
-            @RequestParam(required = false) String userEmail,
-            @RequestParam(required = false) String userName) {
-        log.info("Renovando plan asignado ID: {} por usuario ID: {}", userPlanId, executorId);
-        UserPlanResponseDTO userPlanResponseDTO = userPlanService.renewPlan(
-                userPlanId, executorId, userEmail, userName);
+            @RequestHeader("X-User-Id") Long executorId) {
+        UserPlanResponseDTO userPlanResponseDTO = userPlanService.renewPlan(userPlanId, executorId);
         return ResponseEntity.ok(MessageResponseDTO.success("Plan renovado exitosamente.", userPlanResponseDTO));
     }
 
@@ -89,8 +83,6 @@ public class UserPlanController {
      * @param startDate fecha de inicio del nuevo plan
      * @param reason motivo del cambio
      * @param executorId ID del usuario que realiza el cambio
-     * @param userEmail correo del usuario para la notificación
-     * @param userName nombre del usuario para la notificación
      * @return nuevo plan asignado con HTTP 200
      */
     @PutMapping("/user/{userId}/change-plan")
@@ -99,14 +91,10 @@ public class UserPlanController {
             @RequestParam Long newPlanId,
             @RequestParam String startDate,
             @RequestParam String reason,
-            @RequestHeader("X-User-Id") Long executorId,
-            @RequestParam(required = false) String userEmail,
-            @RequestParam(required = false) String userName) {
-        log.info("Cambiando plan del organizador ID: {} al plan ID: {}", userId, newPlanId);
+            @RequestHeader("X-User-Id") Long executorId) {
         UserPlanResponseDTO response = userPlanService.changePlan(
-                userId, newPlanId, LocalDate.parse(startDate), reason, executorId, userEmail, userName);
-        return ResponseEntity.ok(MessageResponseDTO.success(
-                "Plan cambiado exitosamente.", response));
+                userId, newPlanId, LocalDate.parse(startDate), reason, executorId);
+        return ResponseEntity.ok(MessageResponseDTO.success("Plan cambiado exitosamente.", response));
     }
 
     /**

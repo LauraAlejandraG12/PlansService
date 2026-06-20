@@ -1,5 +1,6 @@
 package com.plan.qv_ms_plans.scheduler;
 
+import com.plan.qv_ms_plans.model.dto.plans.UserInfoDTO;
 import com.plan.qv_ms_plans.model.entity.PlanHistory;
 import com.plan.qv_ms_plans.model.entity.UserPlan;
 import com.plan.qv_ms_plans.model.enums.AuditAction;
@@ -38,6 +39,7 @@ public class PlanValidityScheduler {
     private final PlanHistoryRepository planHistoryRepository;
     private final PlanAuditService planAuditService;
     private final NotificationService notificationService;
+    private final UserClientService userClientService;
 
     /** Días de anticipación para avisar que un plan está por vencer. */
     private static final int DIAS_AVISO_PREVIO = 3;
@@ -111,23 +113,21 @@ public class PlanValidityScheduler {
     /**
      * Envía la notificación de plan próximo a vencer (PLAN_EXPIRING).
      */
-    /**
-     * Envía la notificación de plan próximo a vencer (PLAN_EXPIRING).
-     */
     private void notifyExpiring(UserPlan userPlan) {
-        if (userPlan.getUserEmail() == null) {
-            log.warn("No se pudo notificar vencimiento próximo: plan ID {} sin email guardado.", userPlan.getIdUserPlan());
+        UserInfoDTO userInfo = userClientService.getUserById(userPlan.getUserId());
+        if (userInfo == null || userInfo.getEmail() == null) {
+            log.warn("No se pudo notificar vencimiento próximo: no se obtuvo info del usuario ID {}.", userPlan.getUserId());
             return;
         }
 
         String title = "Tu plan está por vencer";
-        String message = "Hola " + userPlan.getUserName() + ", tu plan \"" + userPlan.getPlan().getName() +
+        String message = "Hola " + userInfo.getFullName() + ", tu plan \"" + userPlan.getPlan().getName() +
                 "\" vencerá el " + userPlan.getEndDate() + ". Renuévalo para no perder el acceso a tus eventos.";
 
         notificationService.createNotification(
                 userPlan.getUserId(),
-                userPlan.getUserEmail(),
-                userPlan.getUserName(),
+                userInfo.getEmail(),
+                userInfo.getFullName(),
                 NotificationType.PLAN_EXPIRING,
                 title, message
         );
@@ -137,19 +137,20 @@ public class PlanValidityScheduler {
      * Envía la notificación de plan vencido (PLAN_EXPIRED).
      */
     private void notifyExpired(UserPlan userPlan) {
-        if (userPlan.getUserEmail() == null) {
-            log.warn("No se pudo notificar vencimiento: plan ID {} sin email guardado.", userPlan.getIdUserPlan());
+        UserInfoDTO userInfo = userClientService.getUserById(userPlan.getUserId());
+        if (userInfo == null || userInfo.getEmail() == null) {
+            log.warn("No se pudo notificar vencimiento: no se obtuvo info del usuario ID {}.", userPlan.getUserId());
             return;
         }
 
         String title = "Tu plan ha vencido";
-        String message = "Hola " + userPlan.getUserName() + ", tu plan \"" + userPlan.getPlan().getName() +
+        String message = "Hola " + userInfo.getFullName() + ", tu plan \"" + userPlan.getPlan().getName() +
                 "\" venció el " + userPlan.getEndDate() + ". Renuévalo o adquiere uno nuevo para seguir gestionando tus eventos.";
 
         notificationService.createNotification(
                 userPlan.getUserId(),
-                userPlan.getUserEmail(),
-                userPlan.getUserName(),
+                userInfo.getEmail(),
+                userInfo.getFullName(),
                 NotificationType.PLAN_EXPIRED,
                 title, message
         );

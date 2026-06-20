@@ -2,6 +2,7 @@ package com.plan.qv_ms_plans.service.plans;
 
 
 import com.plan.qv_ms_plans.model.dto.plans.PlanResponseDTO;
+import com.plan.qv_ms_plans.model.dto.plans.UserInfoDTO;
 import com.plan.qv_ms_plans.model.dto.plans.UserPlanRequestDTO;
 import com.plan.qv_ms_plans.model.dto.plans.UserPlanResponseDTO;
 import com.plan.qv_ms_plans.model.entity.Plan;
@@ -38,6 +39,7 @@ public class UserPlanService {
     private final PlanService planService;
     private final PlanAuditService planAuditService;
     private final NotificationService notificationService;
+    private final UserClientService userClientService;
 
     /**
      * Construye una entidad {@link UserPlan} con los datos proporcionados.
@@ -157,6 +159,7 @@ public class UserPlanService {
      * @return DTO con los datos de la asignación creada
      * @throws IllegalStateException si el plan no está activo
      */
+
     @Transactional
     public UserPlanResponseDTO acquirePlanByOrganizer(UserPlanRequestDTO userPlanRequestDTO, Long organizerId) {
         Plan plan = planService.findPlanById(userPlanRequestDTO.getPlanId());
@@ -165,9 +168,11 @@ public class UserPlanService {
             throw new IllegalStateException("No se puede adquirir un plan inactivo.");
         }
 
+        UserInfoDTO userInfo = userClientService.getUserById(organizerId);
+        String userEmail = userInfo != null ? userInfo.getEmail() : null;
+        String userName = userInfo != null ? userInfo.getFullName() : null;
+
         UserPlan userPlan = buildUserPlan(organizerId, plan, userPlanRequestDTO.getStartDate());
-        userPlan.setUserEmail(userPlanRequestDTO.getUserEmail());
-        userPlan.setUserName(userPlanRequestDTO.getUserName());
         UserPlan savedUserPlan = userPlanRepository.save(userPlan);
 
         saveHistory(savedUserPlan, "Adquisición inicial del plan por el organizador.");
@@ -175,9 +180,7 @@ public class UserPlanService {
                 "El organizador ID: " + organizerId + " adquirió el plan: " + plan.getName());
 
         notificationService.createNotification(
-                organizerId,
-                userPlanRequestDTO.getUserEmail(),
-                userPlanRequestDTO.getUserName(),
+                organizerId, userEmail, userName,
                 NotificationType.PLAN_PURCHASED,
                 "Compra exitosa",
                 "Tu plan '" + plan.getName() + "' fue adquirido exitosamente. " +
@@ -214,16 +217,17 @@ public class UserPlanService {
      * @throws EntityNotFoundException si la asignación no existe
      */
     @Transactional
-    public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId,
-                                         String userEmail, String userName) {
+    public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId) {
         UserPlan userPlan = findUserPlanById(userPlanId);
+
+        UserInfoDTO userInfo = userClientService.getUserById(userPlan.getUserId());
+        String userEmail = userInfo != null ? userInfo.getEmail() : null;
+        String userName = userInfo != null ? userInfo.getFullName() : null;
 
         userPlan.setStartDate(LocalDate.now());
         userPlan.setEndDate(LocalDate.now().plusDays(userPlan.getPlan().getDurationDays()));
         userPlan.setStatus(UserPlanStatus.active);
         userPlan.setRenewal(true);
-        userPlan.setUserEmail(userEmail);
-        userPlan.setUserName(userName);
 
         UserPlan savedUserPlan = userPlanRepository.save(userPlan);
 
@@ -233,9 +237,7 @@ public class UserPlanService {
                         " del organizador ID: " + userPlan.getUserId());
 
         notificationService.createNotification(
-                userPlan.getUserId(),
-                userEmail,
-                userName,
+                userPlan.getUserId(), userEmail, userName,
                 NotificationType.PLAN_RENEWED,
                 "Renovación exitosa",
                 "Tu plan '" + userPlan.getPlan().getName() + "' fue renovado exitosamente. " +
@@ -261,9 +263,8 @@ public class UserPlanService {
      * @throws IllegalStateException si el nuevo plan no está activo
      */
     @Transactional
-    public UserPlanResponseDTO changePlan(Long userId, Long newPlanId, LocalDate startDate, String reason, Long executorId, String userEmail, String userName) {
+    public UserPlanResponseDTO changePlan(Long userId, Long newPlanId, LocalDate startDate, String reason, Long executorId) {
 
-        // Busca y cancela el plan activo actual
         UserPlan currentPlan = userPlanRepository
                 .findByUserIdAndStatus(userId, UserPlanStatus.active)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -274,15 +275,12 @@ public class UserPlanService {
         userPlanRepository.save(currentPlan);
         saveHistory(currentPlan, "Plan cancelado por cambio de plan. Motivo: " + reason);
 
-        // Asigna el nuevo plan
         Plan newPlan = planService.findPlanById(newPlanId);
         if (!newPlan.getStatus().name().equals("active")) {
             throw new IllegalStateException("No se puede asignar un plan inactivo.");
         }
 
         UserPlan newUserPlan = buildUserPlan(userId, newPlan, startDate);
-        newUserPlan.setUserEmail(userEmail);
-        newUserPlan.setUserName(userName);
         UserPlan savedUserPlan = userPlanRepository.save(newUserPlan);
         saveHistory(savedUserPlan, "Nuevo plan asignado por cambio de plan. Motivo: " + reason);
 
@@ -290,10 +288,12 @@ public class UserPlanService {
                 "Cambio de plan: '" + oldPlanName + "' → '" + newPlan.getName() +
                         "' para el organizador ID: " + userId + ". Motivo: " + reason);
 
+        UserInfoDTO userInfo = userClientService.getUserById(userId);
+        String userEmail = userInfo != null ? userInfo.getEmail() : null;
+        String userName = userInfo != null ? userInfo.getFullName() : null;
+
         notificationService.createNotification(
-                userId,
-                userEmail,
-                userName,
+                userId, userEmail, userName,
                 NotificationType.PLAN_CHANGED,
                 "Cambio de plan exitoso",
                 "Cambiaste del plan '" + oldPlanName + "' al plan '" + newPlan.getName() + "'. " +
@@ -301,6 +301,20 @@ public class UserPlanService {
         );
 
         return toResponseDTO(savedUserPlan);
+    }
+
+    /**
+     * Retorna todos los organizadores que tienen asignado un plan activo (RF25.2).
+     *
+     * @param planId ID del plan
+     * @return lista de asignaciones activas del plan
+     */
+    public List<UserPlanResponseDTO> getOrganizersByPlan(Long planId) {
+        return userPlanRepository
+                .findByPlanIdPlanAndStatus(planId, UserPlanStatus.active)
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 
     /**
@@ -316,19 +330,5 @@ public class UserPlanService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "El organizador con ID: " + userId + " no tiene un plan activo."));
         return toResponseDTO(userPlan);
-    }
-
-    /**
-     * Retorna todos los organizadores que tienen asignado un plan activo (RF25.2).
-     *
-     * @param planId ID del plan
-     * @return lista de asignaciones activas del plan
-     */
-    public List<UserPlanResponseDTO> getOrganizersByPlan(Long planId) {
-        return userPlanRepository
-                .findByPlanIdPlanAndStatus(planId, UserPlanStatus.active)
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
     }
 }
