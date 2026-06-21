@@ -23,11 +23,20 @@ public class DashboardService {
      * Combina datos del microservicio de usuarios y eventos.
      * @return objeto con los totales del sistema
      */
-    public GeneralStatsDTO getGeneralStats(){
+    public GeneralStatsDTO getGeneralStats() {
         GeneralStatsDTO stats = userClient.getStats();
         stats.setTotalEvents(eventClient.getTotalEvents());
+
+        GeneralStatsDTO roles = eventClient.getGlobalRoleStats();
+        stats.setTotalOrganizers(roles.getTotalOrganizers());
+        stats.setTotalStaff(roles.getTotalStaff());
+        stats.setTotalAssistants(roles.getTotalAssistants());
+        stats.setTotalJudges(roles.getTotalJudges());
+        stats.setTotalParticipants(roles.getTotalParticipants());
+
         return stats;
     }
+
 
 
     /**
@@ -53,23 +62,27 @@ public class DashboardService {
      *
      * @return objeto con la lista de organizadores y el top organizador
      */
-    public EventByOrganizerResponseDTO getEventByOrganizer(String startDate, String endDate){
-        List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer(startDate, endDate);
+    public EventByOrganizerResponseDTO getEventByOrganizer(String startDate, String endDate) {
+    List<EventByOrganizerDTO> organizers = eventClient.getEventsByOrganizer(startDate, endDate);
 
-        Long maxEvents = organizers.stream()
-                .mapToLong(EventByOrganizerDTO::getNumberEvents)
-                .max()
-                .orElse(0L);
-
-        List<String> topOrgnizers = organizers.stream()
-                .filter(o -> o.getNumberEvents().equals(maxEvents))
-                .map(EventByOrganizerDTO:: getOrganizerName)
-                .collect(Collectors.toList());
-
-        String top = String.join(", ", topOrgnizers);
-
-        return new EventByOrganizerResponseDTO(organizers, top);
+    for (var org : organizers) {
+    String realName = userClient.getUserNameById(org.getOrganizerId());
+    org.setOrganizerName(realName);
     }
+
+    Long maxEvents = organizers.stream()
+        .mapToLong(EventByOrganizerDTO::getNumberEvents)
+        .max()
+        .orElse(0L);
+
+    List<String> topOrganizers = organizers.stream()
+        .filter(o -> o.getNumberEvents().equals(maxEvents))
+        .map(EventByOrganizerDTO::getOrganizerName)  // ← y aquí
+        .collect(Collectors.toList());
+
+    String top = String.join(", ", topOrganizers);
+    return new EventByOrganizerResponseDTO(organizers, top);
+}
 
     /**
      * RF20.2 - Obtiene la cantidad de usuarios por evento
