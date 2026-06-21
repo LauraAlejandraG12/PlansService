@@ -3,6 +3,7 @@ package com.plan.qv_ms_plans.clients.http;
 import com.plan.qv_ms_plans.clients.EventServiceClient;
 import com.plan.qv_ms_plans.model.dto.dashboard.EventByOrganizerDTO;
 import com.plan.qv_ms_plans.model.dto.dashboard.EventUserDetailDTO;
+import com.plan.qv_ms_plans.model.dto.dashboard.GeneralStatsDTO;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,7 +16,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Profile("prod")
 public class HttpEventServiceClient implements EventServiceClient {
 
      private final WebClient.Builder webClientBuilder;
@@ -56,6 +56,16 @@ public class HttpEventServiceClient implements EventServiceClient {
             .uri(eventsUrl + "/api/events/users-by-role")
             .retrieve()
             .bodyToMono(new ParameterizedTypeReference<List<EventUserDetailDTO>>() {})
+            .block();
+    }
+
+    @Override
+    public GeneralStatsDTO getGlobalRoleStats() {
+        return webClientBuilder.build()
+            .get()
+            .uri(eventsUrl + "/api/events/global-roles")
+            .retrieve()
+            .bodyToMono(GeneralStatsDTO.class)
             .block();
     }
     

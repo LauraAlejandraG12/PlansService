@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GeneralStatsDTO {
+    private Long totalEvents;
     private Long totalUsers;
     private Long totalOrganizers;
     private Long totalStaff;
+    private Long totalAssistants;
     private Long totalJudges;
     private Long totalParticipants;
-    private Long totalAssistants;
-    private Long totalEvents;
 }

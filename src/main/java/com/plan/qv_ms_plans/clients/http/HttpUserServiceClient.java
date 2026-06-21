@@ -18,7 +18,7 @@ import com.plan.qv_ms_plans.repository.UserPlanRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile("prod")
+
 @Service
 @RequiredArgsConstructor
 public class HttpUserServiceClient implements UserServiceClient{
@@ -67,5 +67,19 @@ public class HttpUserServiceClient implements UserServiceClient{
             .bodyToMono(new ParameterizedTypeReference<List<MonthlyGrowthDTO>>() {})
             .block();
     }
-    
+
+
+    @Override
+    public String getUserNameById(Long userId) {
+         try {
+            return webClientBuilder.build()
+                    .get()
+                    .uri(authUrl + "/api/users/by-id/" + userId)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            } catch (Exception e) {
+                return "Usuario " + userId;
+        }
+    } 
 }

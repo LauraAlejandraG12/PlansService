@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventByOrganizerDTO {
     private Long organizerId;
+    private String organizerEmail;
     private String organizerName;
     private Long numberEvents;
 }

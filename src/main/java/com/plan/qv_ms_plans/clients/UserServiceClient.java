@@ -10,4 +10,5 @@ public interface UserServiceClient {
     GeneralStatsDTO getStats();
     List<PlanStatsDTO> getOrganizersByPlan(String startDate, String endDate, String plan);
     List<MonthlyGrowthDTO> getMonthlyGrowth(String startDate, String endDate);
+    String getUserNameById(Long UserId);
 }
