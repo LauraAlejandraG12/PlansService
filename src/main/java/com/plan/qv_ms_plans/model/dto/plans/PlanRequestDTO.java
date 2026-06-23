@@ -57,22 +57,10 @@ public class PlanRequestDTO {
     private Integer maxOrganizers = 0;
 
     /**
-     * Cantidad máxima de participantes permitidos.
+     * Cantidad máxima de invitados permitidos (jurado, participante, asistente).
      */
     @Min(value = 0, message = "El valor no puede ser negativo.")
-    private Integer maxParticipants = 0;
-
-    /**
-     * Cantidad máxima de jueces permitidos.
-     */
-    @Min(value = 0, message = "El valor no puede ser negativo.")
-    private Integer maxJudges = 0;
-
-    /**
-     * Cantidad máxima de asistentes permitidos.
-     */
-    @Min(value = 0, message = "El valor no puede ser negativo.")
-    private Integer maxAttendees = 0;
+    private Integer maxGuests = 0;
 
     /**
      * Cantidad máxima de personal de apoyo permitido.

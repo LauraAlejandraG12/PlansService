@@ -104,9 +104,8 @@ public class UserPlanService {
         planResponseDTO.setDurationDays(userPlan.getPlan().getDurationDays());
         planResponseDTO.setMaxEvents(userPlan.getPlan().getMaxEvents());
         planResponseDTO.setMaxOrganizers(userPlan.getPlan().getMaxOrganizers());
-        planResponseDTO.setMaxParticipants(userPlan.getPlan().getMaxParticipants());
-        planResponseDTO.setMaxJudges(userPlan.getPlan().getMaxJudges());
-        planResponseDTO.setMaxAttendees(userPlan.getPlan().getMaxAttendees());
+        planResponseDTO.setMaxGuests(userPlan.getPlan().getMaxGuests());
+        planResponseDTO.setMaxStaff(userPlan.getPlan().getMaxStaff());
         planResponseDTO.setMaxStaff(userPlan.getPlan().getMaxStaff());
         planResponseDTO.setStatus(userPlan.getPlan().getStatus());
         planResponseDTO.setCreatedAt(userPlan.getPlan().getCreatedAt());

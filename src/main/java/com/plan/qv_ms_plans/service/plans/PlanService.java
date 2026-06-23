@@ -48,9 +48,7 @@ public class PlanService {
         planResponseDTO.setDurationDays(plan.getDurationDays());
         planResponseDTO.setMaxEvents(plan.getMaxEvents());
         planResponseDTO.setMaxOrganizers(plan.getMaxOrganizers());
-        planResponseDTO.setMaxParticipants(plan.getMaxParticipants());
-        planResponseDTO.setMaxJudges(plan.getMaxJudges());
-        planResponseDTO.setMaxAttendees(plan.getMaxAttendees());
+        planResponseDTO.setMaxGuests(plan.getMaxGuests());
         planResponseDTO.setMaxStaff(plan.getMaxStaff());
         planResponseDTO.setStatus(plan.getStatus());
         planResponseDTO.setCreatedAt(plan.getCreatedAt());
@@ -82,9 +80,7 @@ public class PlanService {
         plan.setDurationDays(planRequestDTO.getDurationDays());
         plan.setMaxEvents(planRequestDTO.getMaxEvents());
         plan.setMaxOrganizers(planRequestDTO.getMaxOrganizers());
-        plan.setMaxParticipants(planRequestDTO.getMaxParticipants());
-        plan.setMaxJudges(planRequestDTO.getMaxJudges());
-        plan.setMaxAttendees(planRequestDTO.getMaxAttendees());
+        plan.setMaxGuests(planRequestDTO.getMaxGuests());
         plan.setMaxStaff(planRequestDTO.getMaxStaff());
         plan.setStatus(planRequestDTO.getStatus());
 
@@ -183,9 +179,7 @@ public class PlanService {
         Integer oldDurationDays = existingPlan.getDurationDays();
         Integer oldMaxEvents = existingPlan.getMaxEvents();
         Integer oldMaxOrganizers = existingPlan.getMaxOrganizers();
-        Integer oldMaxParticipants = existingPlan.getMaxParticipants();
-        Integer oldMaxJudges = existingPlan.getMaxJudges();
-        Integer oldMaxAttendees = existingPlan.getMaxAttendees();
+        Integer oldMaxGuests = existingPlan.getMaxGuests();
         Integer oldMaxStaff = existingPlan.getMaxStaff();
         String oldStatus = existingPlan.getStatus().name();
 
@@ -219,17 +213,9 @@ public class PlanService {
             description.append("Máx. Organizadores: '").append(oldMaxOrganizers)
                     .append("' → '").append(planRequestDTO.getMaxOrganizers()).append("'. ");
         }
-        if (!oldMaxAttendees.equals(planRequestDTO.getMaxAttendees())) {
-            description.append("Máx. Asistentes: '").append(oldMaxAttendees)
-                    .append("' → '").append(planRequestDTO.getMaxAttendees()).append("'. ");
-        }
-        if (!oldMaxParticipants.equals(planRequestDTO.getMaxParticipants())) {
-            description.append("Máx. Participantes: '").append(oldMaxParticipants)
-                    .append("' → '").append(planRequestDTO.getMaxParticipants()).append("'. ");
-        }
-        if (!oldMaxJudges.equals(planRequestDTO.getMaxJudges())) {
-            description.append("Máx. Jueces: '").append(oldMaxJudges)
-                    .append("' → '").append(planRequestDTO.getMaxJudges()).append("'. ");
+        if (!oldMaxGuests.equals(planRequestDTO.getMaxGuests())) {
+            description.append("Máx. Invitados: '").append(oldMaxGuests)
+                    .append("' → '").append(planRequestDTO.getMaxGuests()).append("'. ");
         }
         if (!oldMaxStaff.equals(planRequestDTO.getMaxStaff())) {
             description.append("Máx. Personal: '").append(oldMaxStaff)
@@ -243,9 +229,7 @@ public class PlanService {
         existingPlan.setDurationDays(planRequestDTO.getDurationDays());
         existingPlan.setMaxEvents(planRequestDTO.getMaxEvents());
         existingPlan.setMaxOrganizers(planRequestDTO.getMaxOrganizers());
-        existingPlan.setMaxParticipants(planRequestDTO.getMaxParticipants());
-        existingPlan.setMaxJudges(planRequestDTO.getMaxJudges());
-        existingPlan.setMaxAttendees(planRequestDTO.getMaxAttendees());
+        existingPlan.setMaxGuests(planRequestDTO.getMaxGuests());
         existingPlan.setMaxStaff(planRequestDTO.getMaxStaff());
         existingPlan.setStatus(planRequestDTO.getStatus());
 

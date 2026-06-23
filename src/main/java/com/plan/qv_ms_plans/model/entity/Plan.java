@@ -64,23 +64,8 @@ public class Plan {
     @Column(name = "max_organizers")
     private Integer maxOrganizers = 0;
 
-    /**
-     * Cantidad máxima de participantes permitidos en el plan.
-     */
-    @Column(name = "max_participants")
-    private Integer maxParticipants = 0;
-
-    /**
-     * Cantidad máxima de jueces permitidos en el plan.
-     */
-    @Column(name = "max_judges")
-    private Integer maxJudges = 0;
-
-    /**
-     * Cantidad máxima de asistentes permitidos en el plan.
-     */
-    @Column(name = "max_attendees")
-    private Integer maxAttendees = 0;
+    @Column(name = "max_guests")
+    private Integer maxGuests = 0;
 
     /**
      * Cantidad máxima de personal de apoyo permitido en el plan.

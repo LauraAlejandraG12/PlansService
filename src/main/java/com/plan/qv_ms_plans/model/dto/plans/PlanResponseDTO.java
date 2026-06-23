@@ -40,14 +40,8 @@ public class PlanResponseDTO {
     /** Cantidad máxima de organizadores. */
     private Integer maxOrganizers;
 
-    /** Cantidad máxima de participantes. */
-    private Integer maxParticipants;
-
-    /** Cantidad máxima de jueces. */
-    private Integer maxJudges;
-
-    /** Cantidad máxima de asistentes. */
-    private Integer maxAttendees;
+    /** Cantidad máxima de invitados (jurado, participante, asistente). */
+    private Integer maxGuests;
 
     /** Cantidad máxima de personal de apoyo. */
     private Integer maxStaff;
