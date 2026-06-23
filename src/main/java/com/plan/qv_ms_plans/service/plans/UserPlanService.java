@@ -220,6 +220,13 @@ public class UserPlanService {
     public UserPlanResponseDTO renewPlan(Long userPlanId, Long executorId) {
         UserPlan userPlan = findUserPlanById(userPlanId);
 
+        long daysRemaining = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), userPlan.getEndDate());
+        if (daysRemaining > 2) {
+            throw new IllegalStateException(
+                    "Aún no puedes renovar tu plan. Te quedan " + daysRemaining +
+                            " días disponibles. Podrás renovar cuando falten 2 días o menos para el vencimiento.");
+        }
+
         UserInfoDTO userInfo = userClientService.getUserById(userPlan.getUserId());
         String userEmail = userInfo != null ? userInfo.getEmail() : null;
         String userName = userInfo != null ? userInfo.getFullName() : null;
