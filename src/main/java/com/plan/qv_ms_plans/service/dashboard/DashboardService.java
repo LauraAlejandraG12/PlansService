@@ -30,14 +30,10 @@ public class DashboardService {
         GeneralStatsDTO roles = eventClient.getGlobalRoleStats();
         stats.setTotalOrganizers(roles.getTotalOrganizers());
         stats.setTotalStaff(roles.getTotalStaff());
-        stats.setTotalAssistants(roles.getTotalAssistants());
-        stats.setTotalJudges(roles.getTotalJudges());
-        stats.setTotalParticipants(roles.getTotalParticipants());
+        stats.setTotalGuests(roles.getTotalGuests());
 
         return stats;
     }
-
-
 
     /**
      * RF19 y RF19.1 - Obtiene la distribución de organizadores por plan

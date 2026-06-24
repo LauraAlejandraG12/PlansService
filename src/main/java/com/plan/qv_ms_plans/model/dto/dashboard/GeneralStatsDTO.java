@@ -12,7 +12,5 @@ public class GeneralStatsDTO {
     private Long totalUsers;
     private Long totalOrganizers;
     private Long totalStaff;
-    private Long totalAssistants;
-    private Long totalJudges;
-    private Long totalParticipants;
+    private Long totalGuests;
 }
