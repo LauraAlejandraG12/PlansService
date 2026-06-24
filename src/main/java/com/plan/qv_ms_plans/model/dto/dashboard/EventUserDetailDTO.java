@@ -11,7 +11,5 @@ public class EventUserDetailDTO {
     private Long eventId;
     private String eventName;
     private Long staff;
-    private Long judges;
-    private Long participants;
-    private Long assistants;
+    private Long guests;
 }

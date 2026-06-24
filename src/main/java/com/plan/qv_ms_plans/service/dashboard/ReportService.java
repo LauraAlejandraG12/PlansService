@@ -64,9 +64,8 @@ public class ReportService {
 
         XSSFSheet statsSheet = workbook.createSheet("Datos Generales");
         String[] statsHeaders = {
-                "Total Usuarios", "Organizadores", "Personal",
-                "Asistentes", "Jurados", "Participantes", "Total Eventos"
-        };
+                "Total Usuarios", "Organizadores", "Personal", "Invitados", "Total Eventos"
+        };;
 
         Row statsHeader = statsSheet.createRow(0);
         for (int i = 0; i < statsHeaders.length; i++) {
@@ -81,10 +80,8 @@ public class ReportService {
         statsRow.createCell(0).setCellValue(stats.getTotalUsers());
         statsRow.createCell(1).setCellValue(stats.getTotalOrganizers());
         statsRow.createCell(2).setCellValue(stats.getTotalStaff());
-        statsRow.createCell(3).setCellValue(stats.getTotalAssistants());
-        statsRow.createCell(4).setCellValue(stats.getTotalJudges());
-        statsRow.createCell(5).setCellValue(stats.getTotalParticipants());
-        statsRow.createCell(6).setCellValue(stats.getTotalEvents());
+        statsRow.createCell(3).setCellValue(stats.getTotalGuests());
+        statsRow.createCell(4).setCellValue(stats.getTotalEvents());
 
         // hoja 2: ORGANIZADORES POR PLAN
 
@@ -174,9 +171,7 @@ public class ReportService {
             Row row = eventsSheet.createRow(eventsRowNum++);
             row.createCell(0).setCellValue(event.getEventName());
             row.createCell(1).setCellValue(event.getStaff());
-            row.createCell(2).setCellValue(event.getAssistants());
-            row.createCell(3).setCellValue(event.getJudges());
-            row.createCell(4).setCellValue(event.getParticipants());
+            row.createCell(2).setCellValue(event.getGuests());
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -336,9 +331,7 @@ public class ReportService {
                     { "Total Usuarios",  String.valueOf(stats.getTotalUsers()) },
                     { "Organizadores",   String.valueOf(stats.getTotalOrganizers()) },
                     { "Personal",        String.valueOf(stats.getTotalStaff()) },
-                    { "Asistentes",      String.valueOf(stats.getTotalAssistants()) },
-                    { "Jurados",         String.valueOf(stats.getTotalJudges()) },
-                    { "Participantes",   String.valueOf(stats.getTotalParticipants()) },
+                    { "Invitados",       String.valueOf(stats.getTotalGuests()) },
                     { "Total Eventos",   String.valueOf(stats.getTotalEvents()) }
             };
  
@@ -439,8 +432,8 @@ public class ReportService {
             dibujarEncabezado(cs, fontBold, fontRegular, "Usuarios por Evento");
  
             var events = dashboardService.getUsersByEvent();
-            String[] headers = { "Evento", "Personal", "Asistentes", "Jurados", "Participantes" };
-            float[] widths   = { 160f, 75f, 85f, 75f, 100f };
+            String[] headers = { "Evento", "Personal", "Invitados" };
+            float[] widths   = { 250f, 145f, 145f };
  
             float ty = 700;
             dibujarCabeceraMultiple(cs, fontBold, headers, widths, ty);
@@ -451,13 +444,9 @@ public class ReportService {
                         new String[]{
                                 event.getEventName(),
                                 String.valueOf(event.getStaff()),
-                                String.valueOf(event.getAssistants()),
-                                String.valueOf(event.getJudges()),
-                                String.valueOf(event.getParticipants())
+                                String.valueOf(event.getGuests())
                         },
                         widths, ty, alt);
-                ty -= 26;
-                alt = !alt;
             }
             dibujarFooter(cs, fontRegular, 6);
         }
